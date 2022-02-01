@@ -1,0 +1,16 @@
+<svg width="16" height="16" xmlns="http://www.w3.org/2000/svg" class="bi bi-heart">
+
+ <g>
+  <title>background</title>
+  <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1"/>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <ellipse stroke="null" ry="4.227305" rx="4.088704" id="svg_4" cy="5.020098" cx="4.708247" stroke-opacity="null" stroke-width="null" fill="#ed0202"/>
+  <ellipse stroke="null" ry="4.227305" rx="4.088704" id="svg_7" cy="5.089398" cx="11.153154" stroke-opacity="null" stroke-width="null" fill="#ed0202"/>
+  <ellipse stroke="null" transform="rotate(41 9.31592655181885,8.311176300048828) " ry="5.469488" rx="4.088704" id="svg_8" cy="8.311176" cx="9.315927" stroke-opacity="null" stroke-width="null" fill="#ed0202"/>
+  <ellipse stroke="null" transform="rotate(-39 6.551280975341801,9.195776939392092) " ry="5.284477" rx="3.647626" id="svg_12" cy="9.195777" cx="6.551281" stroke-opacity="null" stroke-width="null" fill="#ed0202"/>
+  <path id="svg_1" d="m8,2.748l-0.717,-0.737c-1.683,-1.73 -4.769,-1.133 -5.883,1.042c-0.523,1.023 -0.641,2.5 0.314,4.385c0.92,1.815 2.834,3.989 6.286,6.357c3.452,-2.368 5.365,-4.542 6.286,-6.357c0.955,-1.886 0.838,-3.362 0.314,-4.385c-1.114,-2.175 -4.2,-2.773 -5.883,-1.043l-0.717,0.738zm0,12.252c-15.333,-10.132 -4.721,-18.04 -0.176,-13.857c0.06,0.055 0.119,0.112 0.176,0.171a3.12,3.12 0 0 1 0.176,-0.17c4.544,-4.186 15.157,3.723 -0.176,13.856z"/>
+  <path d="m6.927478,5.9571c0,0.102145 0.102145,0.40858 0.40858,0.81716c0,0 0.092577,-0.419142 0.20429,-0.510725c0.284813,-0.233491 0.40858,-0.20429 0.510725,-0.20429c0.102145,0 0.20429,0 0.715015,0l0.306436,0l0.204289,0l0.102145,0" id="svg_2" stroke-opacity="null" stroke-width="null" stroke="null" fill="none"/>
+ </g>
+</svg>

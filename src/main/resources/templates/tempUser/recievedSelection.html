@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ua" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Підбір страви</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        a#userProfile {
+            color: white;
+            background-color: transparent;
+            text-decoration: none;
+        }
+    </style>
+    <script>
+        $(function(){
+            $("#userProfile").mouseover(function(){
+                $("#userProfile").css("text-decoration", "underline");
+            })
+            $("#userProfile").mouseout(function(){
+                $("#userProfile").css("text-decoration", "none");
+            })
+        });
+    </script>
+</head>
+<body style="background-color: rgb(53, 156, 53);">
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="collapse navbar-collapse" id="navb">
+            <div class="mr-auto">
+                <div th:include="pageParts/navbar :: navcopy">
+                </div>
+            </div>
+            <div>
+                <span style="margin-right: 10px;"><a href="#" id="userProfile">Юзернейм</a></span>
+                <a href="#" class="btn btn-success text-white">Вийти</a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <div class="container mt-5 p-5 bg-white" style="border-radius: 20px;">
+        <div class="container" id="nothingDiv" style="display: none;">
+            <h1>На жаль, система не змогла знайти жодного рецепту за Вашим запитом. Спробуйте змінити опції та спробуйте ще раз</h1>
+        </div>
+        <h2>Пропоновані рецепти:</h2>
+        <hr>
+        <div th:each="dish : ${resultDishes}">
+            <div class="container m-2 p-3">
+                <div class="row">
+                    <div class="col-4 text-center">
+                        <img th:src="@{${dish.ImagePath}}" width="100%" height="100%">
+                    </div>
+                    <div class="col-4">
+                        <h3 th:text="${dish.dishName}">Салат "Цезар"</h3>
+                        <br/>
+                        <p>Калорійність: <strong th:text="${dish.dishCalority}">100 ккал</strong> / 100 г.</p>
+                        <p>Категорія: <strong th:text="${dish.dishType}">салати</strong></p>
+                        <p>Білки: <strong th:text="${dish.dishProteins}">21</strong> / 100 г.</p>
+                        <p>Жири: <strong th:text="${dish.dishLipids}">11</strong> / 100 г.</p>
+                        <p>Вуглеводи: <strong th:text="${dish.dishCarbo}">51</strong> / 100 г.</p>
+                        <p>З них цукри: <strong th:text="${dish.dishSugars}">12</strong> / 100 г.</p>
+                        <a href="#" class="btn btn-success">Переглянути</a>
+                    </div>
+                    <div class="col-4">
+                        <h3>Інгредієнти</h3>
+                        <br/>
+                        <li th:each="ingred : ${dish.ingredientList}"
+                            th:text="(${ingredStat.count} < 9)? ${ingred.key} : '...'" th:if="${ingredStat.count} < 10">Томат - 100 грамів</li>
+                        <li>...</li>
+                    </div>
+                </div>
+            </div>
+            <hr th:if="${dishStat.count} < ${dishStat.size}">
+        </div>
+
+    </div>
+</main>
+<br>
+<footer class="footer" style="padding-bottom: 0px; margin-bottom: 0px; bottom: 0px;">
+    <div class="container-fluid bg-dark text-center" style="height: 100%;">
+        <span class="text-muted">©All rights reserved 2020-2021</span>
+    </div>
+</footer>
+</body>
+</html>

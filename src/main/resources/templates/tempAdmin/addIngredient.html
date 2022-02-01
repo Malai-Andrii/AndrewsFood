@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ua" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Додавання інгредієнта</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        var tempCalory = " ";
+        var tempProteins = " ";
+        var tempLipids = " ";
+        var tempCarbo = " ";
+        var tempSugars = " ";
+        function triggerUnitMeasure() {
+            if (document.getElementById("category").value == 'miscellaneous') {
+                document.getElementById("unitMeasureDiv").style.display = "block";
+                document.getElementById("unitMeasure").value = "";
+
+                tempCalory = document.getElementById("calority").value;
+                document.getElementById("calority").value = "";
+                document.getElementById("calority").setAttribute('disabled', 'disabled');
+
+                tempProteins = document.getElementById("proteins").value;
+                document.getElementById("proteins").value = "";
+                document.getElementById("proteins").setAttribute('disabled', 'disabled');
+
+                tempLipids = document.getElementById("lipids").value;
+                document.getElementById("lipids").value = "";
+                document.getElementById("lipids").setAttribute('disabled', 'disabled');
+
+                tempCarbo = document.getElementById("carbo").value;
+                document.getElementById("carbo").value = "";
+                document.getElementById("carbo").setAttribute('disabled', 'disabled');
+
+                tempSugars = document.getElementById("sugars").value;
+                document.getElementById("sugars").value = "";
+                document.getElementById("sugars").setAttribute('disabled', 'disabled');
+            }
+            else {
+                document.getElementById("unitMeasureDiv").style.display = "none";
+                document.getElementById("unitMeasure").value = "грамів";
+                document.getElementById("calority").value = tempCalory;
+                document.getElementById("calority").removeAttribute('disabled');
+                document.getElementById("proteins").value = tempProteins;
+                document.getElementById("proteins").removeAttribute('disabled');
+                document.getElementById("lipids").value = tempLipids;
+                document.getElementById("lipids").removeAttribute('disabled');
+                document.getElementById("carbo").value = tempCarbo;
+                document.getElementById("carbo").removeAttribute('disabled');
+                document.getElementById("sugars").value = tempSugars;
+                document.getElementById("sugars").removeAttribute('disabled');
+            }
+
+            return false;
+        }
+    </script>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="collapse navbar-collapse" id="navb">
+            <!-- <a class="navbar-brand" href="#">
+              <img src="logo.bmp" alt="Logo" style="height: 50px; width: 50px">
+            </a> -->
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/mainAdmin}">Головна</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)">Всі інгредієнти</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)">Всі рецепти</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <div class="container mt-5 p-5 bg-white" style="border-radius: 20px;">
+        <form th:action="@{/mainAdmin/addIngredient}" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-3"></div>
+                <div class="col-6">
+                    <div class="text-center">
+                        <h5>Властивості інгредієнта</h5>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert"
+                             th:text="${successSave}" th:if="${successSave}">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label for="ingredientName">Назва інгредієнта:</label>
+                        <input type="text" class="form-control" th:classappend="${ingredientNameError} ? 'is-invalid' : ''"
+                               th:value="${ingredient} ? ${ingredient.ingredientName} : ''"
+                               id="ingredientName" name="ingredientName">
+                        <div class="invalid-feedback" th:if="${ingredientNameError}" th:text="${ingredientNameError}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Категорія інгредієнту:</label>
+                        <input id="category" name="category" class="form-control"
+                               onchange="return triggerUnitMeasure()"
+                               list="categoryList" th:classappend="${categoryError} ? 'is-invalid' : ''">
+                        <datalist id="categoryList">
+                            <option th:each="category : ${categories}" th:value="${category}"></option>
+                            <!--<option value="Фрукти">Фрукти</option>-->
+                            <!--<option value="М`ясо">М`ясо</option>-->
+                            <!--<option value="Різне">Різне</option>-->
+                        </datalist>
+                        <div class="invalid-feedback" th:if="${categoryError}" th:text="${categoryError}">
+                        </div>
+                    </div>
+                    <div class="form-group" id="unitMeasureDiv" style="display: none;">
+                        <label for="unitMeasure">Одиниця виміру (штук, дрібок тощо):</label>
+                        <input type="text" class="form-control" th:classappend="${unitMeasureError} ? 'is-invalid' : ''"
+                               th:value="${ingredient} ? ${ingredient.unitMeasure} : 'грамів'"
+                               id="unitMeasure" name="unitMeasure">
+                        <div class="invalid-feedback" th:if="${unitMeasureError}" th:text="${unitMeasureError}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="calority">Калорійність на 100 гр:</label>
+                        <input type="number" class="form-control"
+                               th:classappend="${calorityError} ? 'is-invalid' : ''"
+                               th:value="${ingredient} ? ${ingredient.calority} : ''"
+                               id="calority" name="calority" min="0" max="1000">
+                        <div class="invalid-feedback" th:if="${calorityError}" th:text="${calorityError}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="proteins">Білки:</label>
+                        <input type="number" class="form-control"
+                               th:classappend="${proteinsError} ? 'is-invalid' : ''"
+                               th:value="${ingredient} ? ${ingredient.proteins} : ''"
+                               id="proteins" name="proteins" min="0" max="100">
+                        <div class="invalid-feedback" th:if="${proteinsError}" th:text="${proteinsError}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lipids">Жири:</label>
+                        <input type="number" class="form-control"
+                               th:classappend="${lipidsError} ? 'is-invalid' : ''"
+                               th:value="${ingredient} ? ${ingredient.lipids} : ''"
+                               id="lipids" name="lipids" min="0" max="100">
+                        <div class="invalid-feedback" th:if="${lipidsError}" th:text="${lipidsError}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="carbo">Вуглеводи:</label>
+                        <input type="number" class="form-control"
+                               th:classappend="${carboError} ? 'is-invalid' : ''"
+                               th:value="${ingredient} ? ${ingredient.carbo} : ''"
+                               id="carbo" name="carbo" min="0" max="100">
+                        <div class="invalid-feedback" th:if="${carboError}" th:text="${carboError}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="sugars">З них цукри:</label>
+                        <input type="number" class="form-control"
+                               th:classappend="${sugarsError} ? 'is-invalid' : ''"
+                               th:value="${ingredient} ? ${ingredient.sugars} : ''"
+                               id="sugars" name="sugars" min="0" max="100">
+                        <div class="invalid-feedback" th:if="${sugarsError}" th:text="${sugarsError}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="contradictions">Особливості інгредієнта:</label>
+                        <div class="form-check" id="contradictions">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" name="NOGLUTEN" value="NOGLUTEN">Містить глютен
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" name="NOHOT" value="NOHOT">Гострий
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" name="NOSUGAR" value="NOSUGAR">Багато цукру
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="fileImg">Завантажте картинку:</label>
+                        <input type="file" id="fileImg" name="imageIngr" accept="image/png, image/jpeg">
+                    </div>
+                </div>
+                <div class="col-3"></div>
+            </div>
+            <br>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success">Зберегти</button>
+            </div>
+        </form>
+        <hr>
+    </div>
+    </div>
+</main>
+<br>
+<footer class="footer" style="padding-bottom: 0px; margin-bottom: 0px; bottom: 0px;">
+    <div class="container-fluid bg-dark text-center" style="height: 100%;">
+        <span class="text-muted">©All rights reserved 2020-2021</span>
+    </div>
+</footer>
+</body>
+</html>

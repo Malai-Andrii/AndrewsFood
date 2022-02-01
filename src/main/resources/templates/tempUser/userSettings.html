@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ua" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>My title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        .form-control:focus {
+            border-color:rgba(0, 220, 0, 0.9);
+            box-shadow: 0 0 4px rgba(0, 220, 0, 0.9), 0 0 6px rgba(0, 220, 0, 0.5);
+        }
+    </style>
+    <script>
+        var tempCalory = " ";
+        function triggerSportDisplay() {
+            if (document.getElementById("nutritionStyle").value == 'sport') {
+                document.getElementById("bodyConstitutionDiv").style.display = "block";
+                document.getElementById("trainTypeDiv").style.display = "block";
+                sedentaryChild = document.getElementById("sedentary");
+                moderateChild = document.getElementById("moderate");
+                document.getElementById("sedentary").style.display = "none";
+                document.getElementById("moderate").style.display = "none";
+                document.getElementById("lifeStyle").value = 'medium';
+            }
+            else {
+                document.getElementById("sedentary").style.display = "block";
+                document.getElementById("moderate").style.display = "block";
+                document.getElementById("bodyConstitutionDiv").style.display = "none";
+                document.getElementById("trainTypeDiv").style.display = "none";
+            }
+            return false;
+        }
+        function triggerLifeDisplay() {
+            if (document.getElementById("lifeStyle").value == 'sportive') {
+                document.getElementById("usual").style.display = "none";
+                document.getElementById("vegetarian").style.display = "none";
+                document.getElementById("vegan").style.display = "none";
+                document.getElementById("redutarian").style.display = "none";
+                document.getElementById("nutritionStyle").value = 'sport';
+            }
+            else {
+                document.getElementById("usual").style.display = "block";
+                document.getElementById("vegetarian").style.display = "block";
+                document.getElementById("vegan").style.display = "block";
+                document.getElementById("redutarian").style.display = "block";
+            }
+            return false;
+        }
+        function triggerCoef() {
+            if (!document.getElementById("proteinsCoef").hasAttribute('disabled', 'disabled')) {
+                document.getElementById("proteinsCoef").setAttribute('disabled', 'disabled');
+                document.getElementById("lipidsCoef").setAttribute('disabled', 'disabled');
+                document.getElementById("carboCoef").setAttribute('disabled', 'disabled');
+                document.getElementById("sugarsCoef").setAttribute('disabled', 'disabled');
+            }
+            else {
+                document.getElementById("proteinsCoef").removeAttribute('disabled');
+                document.getElementById("lipidsCoef").removeAttribute('disabled');
+                document.getElementById("carboCoef").removeAttribute('disabled');
+                document.getElementById("sugarsCoef").removeAttribute('disabled');
+            }
+            return false;
+        }
+
+        function PLCandCalority() {
+            generatePLC();
+            generateCalority();
+            return false;
+        }
+
+        function IMTandCalority() {
+            changeIMT();
+            generateCalority();
+            return false;
+        }
+
+        function checkValue(id) {
+            var min = Number.parseInt(document.getElementById(id).getAttribute('min'));
+            var max = Number.parseInt(document.getElementById(id).getAttribute('max'));
+            var currentValue = Number.parseInt(document.getElementById(id).value);
+            if (currentValue >= min && currentValue <= max) {return false;}
+            else if (min > currentValue) {document.getElementById(id).value = min}
+            else if (max < currentValue) {document.getElementById(id).value = max}
+            return false;
+        }
+
+        function setPLC(p, l, c, s) {
+            document.getElementById("proteinsCoef").value = p;
+            document.getElementById("lipidsCoef").value = l;
+            document.getElementById("carboCoef").value = c;
+            document.getElementById("sugarsCoef").value = s;
+        }
+
+        function generatePLC() {
+            var nutritionStyle = document.getElementById("nutritionStyle").value;
+            var lifeStyle = document.getElementById("lifeStyle").value;
+            var trainType = document.getElementById("trainType").value;
+            var bodyConstitution = document.getElementById("bodyConstitution").value;
+            console.log(bodyConstitution);
+            var imtCoef = document.getElementById("imtLegend").innerHTML;
+            var sexCoef = (document.getElementById("sex").value == "Чоловіча") ? 0 : 0.5;
+            imtCoef = imtCoef.substring(imtCoef.length - imtCoef.lastIndexOf(':') - 1);
+            if (nutritionStyle == "звичайний") {setPLC(1, 1, 4, 10);}
+            else if (nutritionStyle == "спорт" && trainType == "силові") {
+                if (bodyConstitution == "ектомофр") {setPLC(2, 1, 6, 15);}
+                if (bodyConstitution == "мезоморф") {setPLC(2, 1, 5, 10);}
+                if (bodyConstitution == "ендоморф") {setPLC(2, 1, 4, 10);}
+            }
+            else if (nutritionStyle == "спорт" && trainType == "кардіо") {
+                if (bodyConstitution == "ектомофр") {setPLC(1, 1, 6, 15);}
+                if (bodyConstitution == "мезоморф") {setPLC(1, 1, 5, 10);}
+                if (bodyConstitution == "ендоморф") {setPLC(1, 1, 4, 10);}
+            }
+            else if (nutritionStyle == "спорт" && trainType == "змішаний") {
+                if (bodyConstitution == "ектомофр") {setPLC(2, 1, 6, 15);}
+                if (bodyConstitution == "мезоморф") {setPLC(2, 1, 5, 10);}
+                if (bodyConstitution == "ендоморф") {setPLC(2, 1, 4, 10);}
+            }
+
+            if (imtCoef < 30 - sexCoef) {return false;}
+            else {setPLC(2, 1, 4, 10);}
+            return false;
+        }
+
+        function generateCalority() {
+            if (document.getElementById("calorityAuto").checked) {
+                var AMR, BMR, S, W, H, A, imtCoef, sexCoef;
+                var IMT = 0;
+                if (document.getElementById("weight").value > 30 && document.getElementById("weight").value < 250) {
+                    W = document.getElementById("weight").value;
+                }
+                else {
+                    document.getElementById("calority").setAttribute('placeholder', 'некоректні параметри')
+                    return false;
+                }
+                if (document.getElementById("height").value > 50 && document.getElementById("height").value < 250) {
+                    H = document.getElementById("height").value;
+                }
+                else {
+                    document.getElementById("calority").setAttribute('placeholder', 'некоректні параметри')
+                    return false;
+                }
+                if (document.getElementById("age").value > 16 && document.getElementById("age").value < 120) {
+                    if (document.getElementById("age").value < 20) {
+                        A = 20;
+                    }
+                    else {A = document.getElementById("age").value;}
+                }
+                else {
+                    document.getElementById("calority").setAttribute('placeholder', 'некоректні параметри')
+                    return false;
+                }
+
+                S = document.getElementById("sex").value;
+                if (S == "Чоловіча") {
+                    BMR = 88.362 + (13.397 * W) + (4.799 * H) - (5.677 * A)
+                }
+                else {
+                    BMR = 447.593 + (9.247 * W) + (3.098  * H) - (4.330 * A)
+                }
+                switch (document.getElementById("lifeStyle").value) {
+                    case "сидячий": AMR = 1.2; break;
+                    case "поміркований": AMR = 1.375; break;
+                    case "середній": AMR = 1.55; break;
+                    case "активний": AMR = 1.725; break;
+                    case "спортивний": AMR = 1.9; break;
+                }
+                imtCoef = document.getElementById("imtLegend").innerHTML;
+                imtCoef = imtCoef.substring(imtCoef.length - imtCoef.lastIndexOf(':') - 1);
+                sexCoef = (document.getElementById("sex").value == "Чоловіча") ? 0 : 0.5;
+                if (imtCoef < 18.5 - sexCoef) {
+                    IMT = 0.1;
+                }
+                else if ( imtCoef > 25 - sexCoef && imtCoef < 35 - sexCoef) {
+                    IMT = -0.1;
+                }
+                else if (imtCoef > 35 - sexCoef && imtCoef < 40 - sexCoef) {
+                    IMT = -0.2;
+                }
+                else if (imtCoef > 40 - sexCoef) {
+                    IMT = -0.3;
+                }
+                var calorityResult = AMR * BMR;
+                calorityResult += calorityResult * IMT;
+                document.getElementById("calority").value = calorityResult.toFixed(0);
+            }
+            return false;
+        }
+
+        function changeIMT() {
+            var height = document.getElementById("height").value;
+            var sexCoef = (document.getElementById("sex").value == "Чоловіча") ? 0 : 0.5;
+            var weight = document.getElementById("weight").value;
+            if (height == "" || weight == "") { imt = 0;}
+            else { var imt = (weight / Math.pow((height / 100), 2)).toFixed(1);}
+
+            document.getElementById("imtLegend").innerHTML = "ІМТ: " + imt;
+
+            if (imt == 0) {
+                document.getElementById("imtLegend").style.color = "red";
+                document.getElementById("imtText").innerHTML = "Введіть всі необхідні параметри та перевірте їх коректність.";
+            }
+            else if (imt < 18.5 - sexCoef) {
+                document.getElementById("imtLegend").style.color = "red";
+                document.getElementById("imtText").innerHTML = "Ваша маса тіла недостатня. "
+                    + "При автоматичному визначенні система додасть до вашого раціону ще 10% калорій";
+            }
+            else if (imt < 25 - sexCoef) {
+                document.getElementById("imtLegend").style.color = "green";
+                document.getElementById("imtText").innerHTML = "Ваша маса тіла в нормі. Так тримати!";
+            }
+            else if (imt < 30 - sexCoef) {
+                document.getElementById("imtLegend").style.color = "rgb(241, 186, 2)";
+                document.getElementById("imtText").innerHTML = "У Вас помірна гладкість. " +
+                    "При автоматичному визначенні система забере 10% калорій, щоб Ви трохи схудли.";
+            }
+            else if (imt < 35 - sexCoef) {
+                document.getElementById("imtLegend").style.color = "red";
+                document.getElementById("imtText").innerHTML = "У Вас ожиріння І ступеню. " +
+                    "При автоматичному визначенні система забере 10% калорій, а також пропонує їсти більше білків замість жирів та вуглеводів, " +
+                    "Це дозволить не втрачати м'язову масу разом із жиром. " +
+                    "Також бажано відмовитися від смаженого та засилля солодощів в раціоні." ;
+            }
+            else if (imt < 40 - sexCoef) {
+                document.getElementById("imtLegend").style.color = "red";
+                document.getElementById("imtText").innerHTML = "У Вас ожиріння ІІ ступеню. " +
+                    "При автоматичному визначенні система забере 20% калорій, а також пропонує їсти більше білків замість жирів та вуглеводів. " +
+                    "Це дозволить не втрачати м'язову масу разом із жиром. " +
+                    "Наполягаємо відмовитися від смаженого та засилля солодощів в раціоні.";
+            }
+            else {
+                document.getElementById("imtLegend").style.color = "red";
+                document.getElementById("imtText").innerHTML = "У Вас ожиріння ІІІ ступеню. " +
+                    "При автоматичному визначенні система забере 30% калорій. Відмовтеся від солодкого та смаженого. " +
+                    "Але обов'язково зверніть увагу, що це серйозний хворобливий стан, тому найкраще, " +
+                    "щоб Вам сформував раціон лікар.";
+            }
+            return false;
+        }
+        function triggerCalority() {
+            if (!document.getElementById("calority").hasAttribute('disabled', 'disabled')) {
+                document.getElementById("calority").setAttribute('disabled', 'disabled');
+                generateCalority();
+            }
+            else {
+                document.getElementById("calority").removeAttribute('disabled');
+                document.getElementById("calority").removeAttribute('placeholder');
+            }
+            return false;
+        }
+    </script>
+</head>
+<body style="background-color: rgb(53, 156, 53);">
+
+<main>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <div class="collapse navbar-collapse" id="navb">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/mainUser}">Головна</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/allDishes}">Всі рецепти</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/allIngredients}">Всі інгредієнти</a>
+                    </li>
+                </ul>
+                <span style="margin-right: 10px;">
+                    <a href="#" id="userProfile" th:inline="text">[[${#httpServletRequest.remoteUser}]]</a>
+                </span>
+                <div>
+                    <form th:action="@{/logout}" method="post">
+                        <input type="submit" class="btn btn-success text-white" value="Вийти">
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container mt-5 p-5 bg-white" style="border-radius: 20px;">
+        <div class="container">
+            <hr/>
+            <fieldset>
+                <legend id="imtLegend">ІМТ: 20.5</legend>
+                <p id="imtText">Ваш Індекс маси тіла в нормі. Так тримати!</p>
+            </fieldset>
+            <hr/>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-6">
+                    <h5>Особисті дані</h5>
+                </div>
+                <div class="col-6">
+                    <h5>Гастрономічні уподобання</h5>
+                </div>
+            </div>
+            <hr>
+            <form th:action="@{/userSettings}" method="post">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="email">Введіть ваш е-mail:</label>
+                            <input type="email" class="form-control" th:classappend="${emailError} ? 'is-invalid' : ''"
+                                   th:value="${customUserDetails} ? ${customUserDetails.email} : ''" id="email" placeholder="example@mail.com" name="email">
+                            <div class="invalid-feedback" th:if="${emailError}" th:text="${emailError}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Ваше ім'я:</label>
+                            <input type="text" class="form-control" th:classappend="${usernameError} ? 'is-invalid' : ''"
+                                   th:value="${user} ? ${user.username} : ''" id="username" name="username">
+                            <div class="invalid-feedback" th:if="${usernameError}" th:text="${usernameError}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sex">Стать:</label>
+                            <select class="form-control" id="sex" name="sex"
+                                    th:value="${customUserDetails} ? ${customUserDetails.sex} : 'Не вказано'"
+                                    onchange="return IMTandCalority()">
+                                <option value="Чоловіча">Чоловіча</option>
+                                <option value="Жіноча">Жіноча</option>
+                                <option value="Не вказано">Не вказано</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="age">Вік:</label>
+                            <input type="number" class="form-control" id="age" name="age" min="16" max="120" onchange="checkValue(this.id); generateCalority()"
+                                   th:classappend="${ageError} ? 'is-invalid' : ''"
+                                   th:value="${customUserDetails} ? ${customUserDetails.age} : ''">
+                            <div class="invalid-feedback" th:if="${ageError}" th:text="${ageError}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="height">Зріст (см):</label>
+                            <input type="number" class="form-control" id="height" name="height" min="50" max="250" onchange="checkValue(this.id); IMTandCalority()"
+                                   th:classappend="${heightError} ? 'is-invalid' : ''"
+                                   th:value="${customUserDetails} ? ${customUserDetails.height} : ''">
+                            <div class="invalid-feedback" th:if="${heightError}" th:text="${heightError}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="weight">Вага (кг):</label>
+                            <input type="number" class="form-control" id="weight" name="weight" min="30" max="250" onchange="checkValue(this.id); IMTandCalority()"
+                                   th:classappend="${weightError} ? 'is-invalid' : ''"
+                                   th:value="${customUserDetails} ? ${customUserDetails.weight} : ''">
+                            <div class="invalid-feedback" th:if="${weightError}" th:text="${weightError}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Змінити пароль:</label>
+                            <input type="password" class="form-control" th:classappend="${passwordError} ? 'is-invalid' : ''"
+                                   id="password" name="password">
+                            <div class="invalid-feedback" th:if="${passwordError}" th:text="${passwordError}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Повторіть пароль:</label>
+                            <input type="password" class="form-control" th:classappend="${passwordConfirmError} ? 'is-invalid' : ''"
+                                   id="passwordConfirm" name="passwordConfirm">
+                            <div class="invalid-feedback" th:if="${passwordConfirmError}" th:text="${passwordConfirmError}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group" id="nutrition_div">
+                            <label for="nutritionStyle">Стиль харчування:</label>
+                            <select class="form-control" id="nutritionStyle" name="nutritionStyle" onchange="triggerSportDisplay(); PLCandCalority();"
+                                    th:value="${customUserDetails} ? ${customUserDetails.nutritionStyle} : 'звичайний'">
+                                <option value="звичайний" id="usual">Звичайний</option>
+                                <option value="веган" id="vegan">Веганство</option>
+                                <option value="вегетеріанець" id="vegetarian">Вегетеріанство</option>
+                                <option value="редутаріанець" id="redutarian">Редутаріанство</option>
+                                <option value="спорт" id="sport">Спортивний</option>
+
+                            </select>
+                        </div>
+                        <div class="form-group" id="life_div">
+                            <label for="lifeStyle">Спосіб життя:</label>
+                            <select class="form-control" id="lifeStyle" name="lifeStyle" onchange="triggerLifeDisplay(); PLCandCalority();"
+                                    th:value="${customUserDetails} ? ${customUserDetails.lifeStyle} : 'поміркований'">
+                                <option value="сидячий" id="sedentary">Сидячий</option>
+                                <option value="поміркований" id="moderate">Поміркований (побутова активність)</option>
+                                <option value="середній" id="medium">Середній(3-5 занять на тиждень)</option>
+                                <option value="активний" id="active">Активний(інтенсивні навантаженя, 6-7 занять на тиждень)</option>
+                                <option value="спортивний" id="sportive">Спортсмен</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="bodyConstitutionDiv" style="display: none;">
+                            <label for="bodyConstitution">Тип тілобудови:</label>
+                            <select class="form-control" id="bodyConstitution" name="bodyConstitution" onchange="return generatePLC()"
+                                    th:value="${customUserDetails} ? ${customUserDetails.bodyConstitution} : 'мезоморф'">
+                                <option value="ектоморф">Ектоморф</option>
+                                <option value="мезоморф">Мезоморф</option>
+                                <option value="ендоморф">Ендоморф</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="trainTypeDiv" style="display: none;">
+                            <label for="trainType">Тип тренування:</label>
+                            <select class="form-control" id="trainType" name="trainType" onchange="return generatePLC()"
+                                    th:value="${customUserDetails} ? ${customUserDetails.trainType} : 'змішаний'">
+                                <option value="силові">Силові вправи</option>
+                                <option value="кардіо">Кардіо</option>
+                                <option value="змішаний">Змішаний</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="religion">Релігійні обмеження:</label>
+                            <select class="form-control" id="religion" name="religion"
+                                    th:value="${customUserDetails} ? ${customUserDetails.religion} : 'нема'">
+                                <option value="нема">Нема</option>
+                                <option value="іслам">Іслам</option>
+                                <option value="юдаїзм">Юдаїзм</option>
+                                <option value="індуїзм">Індуїзм</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="proteinsCoef">Білки/жири/вуглеводи/цукри:</label>
+                            <div class="input-group">
+                                <input type="number" id="proteinsCoef" name="proteinsCoef" class="form-control mr-1"
+                                       placeholder="Б" min="0" max="50" onchange="checkValue(this.id)"
+                                       th:value="${customUserDetails} ? ${customUserDetails.proteinsCoef} : ''"
+                                       disabled>
+                                <input type="number" id="lipidsCoef" name="lipidsCoef" class="form-control mr-1"
+                                       placeholder="Ж" min="0" max="50" onchange="checkValue(this.id)"
+                                       th:value="${customUserDetails} ? ${customUserDetails.lipidsCoef} : ''"
+                                       disabled>
+                                <input type="number" id="carboCoef" name="carboCoef" class="form-control mr-1"
+                                       placeholder="В" min="0" max="50" onchange="checkValue(this.id)"
+                                       th:value="${customUserDetails} ? ${customUserDetails.carboCoef} : ''"
+                                       disabled>
+                                <input type="number" id="sugarsCoef" name="sugarsCoef" class="form-control"
+                                       placeholder="Ц%" min="0" max="100" onchange="checkValue(this.id)"
+                                       th:value="${customUserDetails} ? ${customUserDetails.sugarsCoef} : ''"
+                                       disabled>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input type="checkbox" id="overwritePLC" name="overwritePLC" class="form-check-input" value="" onclick="triggerCoef()">Перевизначити співвідношення БЖВЦ
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="calority">Щоденна калорійність:</label>
+                            <input type="number" class="form-control" id="calority" name="calority" min="1000" max="8000"
+                                   th:classappend="${calorityError} ? 'is-invalid' : ''"
+                                   th:value="${customUserDetails} ? ${customUserDetails.calority} : ''">
+                            <div class="invalid-feedback" th:if="${calorityError}" th:text="${calorityError}">
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input type="checkbox" id="calorityAuto" name="calorityAuto" class="form-check-input" value="" onchange="triggerCalority()">Автоматичне визначення
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="contradictions">Медичні протипоказання:</label>
+                            <div class="form-check" id="contradictions">
+                                <label class="form-check-label">
+                                    <input type="checkbox" th:checked="${#sets.contains(contradictions, 'NOMEAT')}"
+                                           class="form-check-input" name="NOMEAT" value="NOMEAT">Заборона м'яса
+                                </label>
+
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input type="checkbox" th:checked="${#sets.contains(contradictions, 'NOLACTOSE')}"
+                                           class="form-check-input" name="NOLACTOSE" value="NOLACTOSE">Непереносимість лактози
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input type="checkbox" th:checked="${#sets.contains(contradictions, 'NOGLUTEN')}"
+                                           class="form-check-input" name="NOGLUTEN" value="NOGLUTEN">Непереносимість глютену
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input type="checkbox" th:checked="${#sets.contains(contradictions, 'NOFRY')}"
+                                           class="form-check-input" name="NOFRY" value="NOFRY">Заборона смаженого
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input type="checkbox" th:checked="${#sets.contains(contradictions, 'NOHOT')}"
+                                           class="form-check-input" name="NOHOT" value="NOHOT">Заборона гострого
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <label class="form-check-label">
+                                    <input type="checkbox" th:checked="${#sets.contains(contradictions, 'NOSUGAR')}"
+                                           class="form-check-input" name="NOSUGAR" value="NOSUGAR">Обмеження кількості цукру
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-4">
+
+                    </div>  -->
+                </div>
+                <br>
+                <div class="text-center">
+                    <input type="submit" value="Зберегти зміни" class="btn btn-success mb-2">
+                    <br>
+                    <a th:href="@{/mainUser}">Назад</a>
+                </div>
+            </form>
+            <hr>
+        </div>
+    </div>
+    </div>
+</main>
+<br>
+<footer class="footer" style="padding-bottom: 0px; margin-bottom: 0px; bottom: 0px;">
+    <div class="container-fluid bg-dark text-center" style="height: 100%;">
+        <span class="text-muted">©All rights reserved 2020-2021</span>
+    </div>
+</footer>
+</body>
+</html>
+
+
+

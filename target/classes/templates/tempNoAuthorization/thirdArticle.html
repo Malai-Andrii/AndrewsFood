@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ua" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Довідка</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        h3 {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+        p {
+            font-size: large;
+            font-family: Georgia, 'Times New Roman', Times, serif
+        }
+        li {
+            font-size: large;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+    </style>
+
+</head>
+<body style="background-color: rgb(53, 156, 53);">
+<main>
+    <div class="container mt-5 p-5 bg-white" style="border-radius: 20px;">
+        <h3>Пропонування нових страв</h3>
+        <hr/>
+        <p>Обравши відповідний пункт в головному меню, користувачу видається форма для формування страви. Для цього потрібно заповнити:
+            назву страви, її категорію, перелік потрібних інгредієнтів, описати спосіб приготування, проставити можливі протипоказання, а також
+            можна завантажити фото та посилання на відео (необов'язково).</p>
+        <p>Вписавши назву страви, підходимо до вибору категорії. Найбільший інтерес викликають супи. Якщо обрати дану категорію,
+            то користувачу потрібно ще вказати, скільки літрів води потрібно для приготування страви. Це буде використано при підрахунку
+            калорійності страви у перерахунку на 100 грамів.
+        </p>
+        <p>Наступним кроком буде формуваня списку інгредієнтів, потрібних для приготування. Обравши спочатку категорію, користувач
+            отримує список інгредієнтів. Клацнувши на необхідний, він додається в список. Справа є форма для вписування його кількості.
+            Поруч розташований червоний хрестик, який дозволяє усунути інгредієнт зі списку.
+        </p>
+        <p>Далі потрібно описати спосіб приготування страви. Стиль написання вільний, але потрібно пам'ятати, що максимально дозволена
+            кількість символів становить 4096. При перевищенні даної цифри сповістить програма під час спроби записати дані на сервер.
+            Одразу за способом приготутування можна визначити перелік властивостей, які будуть небажані для людей з певними протипоказаннями.
+        </p>
+        <p>Якщо користувач має фото, йому потрібно завантажити його у відповідне поле. Приймаються формати JPEG та PNG.
+            Обмеження на розмір файлу - 5мб.
+        </p>
+        <p>Щодо відео, то потрібно просто перекопіювати посилання на ресурс, що містить відео. Але треба пам'ятати, що не всі
+            ресурси аналогічно Ютубу дозволяють переглядати їхні відео з інших сторінок (тобто з нашого додатку). Тому якщо відео не
+            відображається, рецепт при схваленні адміністратором буде містити посилання у текстовому форматі.
+        </p>
+        <div class="text-center mt-4">
+            <a th:href="@{/}" class="btn btn-success">Назад</a>
+        </div>
+    </div>
+</main>
+<br>
+<footer class="footer" style="padding-bottom: 0px; margin-bottom: 0px; bottom: 0px;">
+    <div class="container-fluid bg-dark text-center" style="height: 100%;">
+        <span class="text-muted">©All rights reserved 2020-2021</span>
+    </div>
+</footer>
+</body>
+</html>
+
+

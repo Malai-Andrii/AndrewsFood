@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ua" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Підбір страви</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        a:link {
+            color: rgb(211, 23, 23);
+            background-color: transparent;
+            text-decoration: none;
+        }
+
+        a:focus {
+            color: rgb(53, 156, 53);
+            background-color: transparent;
+            text-decoration: none;
+        }
+        a:visited {
+            color: black;
+            background-color: transparent;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: rgb(53, 156, 53);
+            background-color: transparent;
+            text-decoration: none;
+        }
+
+        a:active {
+            color: rgb(53, 156, 53);
+            background-color: transparent;
+            text-decoration: underline;
+        }
+        a#userProfile {
+            color: white;
+            background-color: transparent;
+            text-decoration: none;
+        }
+        .flex {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        .h100 {
+            flex-grow: 3
+        }
+    </style>
+    <script>
+        $(function(){
+            $("#userProfile").mouseover(function(){
+                $("#userProfile").css("text-decoration", "underline");
+            })
+            $("#userProfile").mouseout(function(){
+                $("#userProfile").css("text-decoration", "none");
+            })
+        });
+
+        var curFieldNameId = 0;
+        var curShownDiv = "молочні продуктиDiv";
+
+        function deleteField(a) {
+            var contDiv = a.parentNode.parentNode;
+            contDiv.parentNode.removeChild(contDiv);
+            return false;
+        }
+
+        function triggerTimeRestrict() {
+            if (!document.getElementById("timeRestrictHour").hasAttribute('disabled', 'disabled')) {
+                document.getElementById("timeRestrictHour").setAttribute('disabled', 'disabled');
+                document.getElementById("timeRestrictMinute").setAttribute('disabled', 'disabled');
+            }
+            else {
+                document.getElementById("timeRestrictHour").removeAttribute('disabled');
+                document.getElementById("timeRestrictMinute").removeAttribute('disabled');
+            }
+            return false;
+        }
+
+        function triggerCoef() {
+            if (!document.getElementById("proteinsCoef").hasAttribute('disabled', 'disabled')) {
+                document.getElementById("proteinsCoef").setAttribute('disabled', 'disabled');
+                document.getElementById("lipidsCoef").setAttribute('disabled', 'disabled');
+                document.getElementById("carboCoef").setAttribute('disabled', 'disabled');
+                document.getElementById("sugarsCoef").setAttribute('disabled', 'disabled');
+            }
+            else {
+                document.getElementById("proteinsCoef").removeAttribute('disabled');
+                document.getElementById("lipidsCoef").removeAttribute('disabled');
+                document.getElementById("carboCoef").removeAttribute('disabled');
+                document.getElementById("sugarsCoef").removeAttribute('disabled');
+            }
+            return false;
+        }
+
+        function removeHint(parent, hint){
+            var optionForRemove = document.getElementById(hint);
+            if (optionForRemove != null) {
+                document.getElementById(parent).removeChild(optionForRemove);
+            }
+            return false;
+        }
+        function removeHintCategory(){
+            var optionForRemove = document.getElementById("categoryForRemove")
+            document.getElementById("category").removeChild(optionForRemove);
+        }
+
+        function selectCategory(selectedCategory){
+            var categoryDiv = selectedCategory + "Div";
+            var divForShow = document.getElementById(categoryDiv);
+            divForShow.style.display = "block";
+            document.getElementById(curShownDiv).style.display = "none";
+            curShownDiv = categoryDiv;
+            return false;
+        }
+
+        function addField(ingr) {
+            if (document.getElementById("ingredientForRemove")) {
+                removeHint();
+            }
+
+            if (document.getElementById("ingredientAdder").innerHTML.includes(ingr + " (грамів):</label>")) {
+                return false;
+            }
+            curFieldNameId++;
+
+            var divRow = document.createElement("div");
+            divRow.classList.add("container", "row");
+
+            var divCol1 = document.createElement("div");
+            divCol1.classList.add("container", "col-4", "text-left");
+
+            var divCol2 = document.createElement("div");
+            divCol2.classList.add("container", "col-8", "form-inline", "input-group", "mb-1");
+
+            divCol1.innerHTML = '<label name="ingredient_text_'+ curFieldNameId +'" for="ingredient_'+ curFieldNameId +'">'+ ingr +'</label>'
+                + '<input type="hidden" name="ingredient_text_' + curFieldNameId + '" value="'+ ingr +'">';
+            divCol2.innerHTML = '<input id="ingredient_' + curFieldNameId + '" name="ingredient_' + curFieldNameId +  '" type="number" min="1" style="max-width: 33%;" class="form-control"/>'
+                + '<div class="input-group-append" style="max-height: 38px;" onclick="return deleteField(this)" href="#"><button class="btn btn-danger btn-small" type="button">&times</button></div>';
+
+
+            divRow.appendChild(divCol1);
+            divRow.appendChild(divCol2);
+            document.getElementById("ingredientAdder").appendChild(divRow);
+
+            return false;
+        }
+    </script>
+</head>
+<body style="background-color: rgb(53, 156, 53);">
+<div class="flex">
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+            <div class="collapse navbar-collapse" id="navb">
+                <div class="mr-auto">
+                    <div th:include="pageParts/navbar :: navcopy">
+                    </div>
+                </div>
+                <div>
+                    <span style="margin-right: 10px;"><a href="#" id="userProfile">Юзернейм</a></span>
+                    <a href="#" class="btn btn-success text-white">Вийти</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex-grow-1">
+        <div class="container mt-5 p-5 bg-white" style="border-radius: 20px; min-height: 50vh;">
+            <h4>Введіть ті інгредієнти, які є у Вас у наявності:</h4>
+            <form th:action="@{/mainUser/receiptSelection}" method="post">
+                <div id="ingredientAdder" class="mb-4">
+                    <div class="form-group">
+                        <label for="category">Категорія інгредієнту:</label>
+                        <select class="form-control" id="category" name="category" onchange="return selectCategory(this.value);">
+                            <option th:each="category: ${categories}" th:value="${category}" th:text="${category}">Овочі</option>
+                        </select>
+                    </div>
+                    <div class="form-group" th:each="category, categoryStat : ${categories}"
+                         th:id="${category} + 'Div'" th:style="${categoryStat.first}? 'display: block' : 'display: none'">
+                        <label th:for="${category}">Інгредієнт:</label>
+                        <select class="form-control" th:id="${category}" th:name="${category}"
+                                th:attr="onchange=|removeHint('${category}' , 'ingredientForRemove' + '${category}'); addField(this.value);|">
+                            <option value="select" th:id="ingredientForRemove + ${category}">Оберіть елемент</option>
+                            <option th:each="ingredient, ingredientStat : ${ingredients}"
+                                    th:text="${ingredient.ingredientName}" th:value="${ingredient.ingredientName} + ' (' + ${ingredient.unitMeasure} + '):'" th:if="${ingredient.category} == ${category}">Огірок</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Список інгредієнтів:</label>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                             th:if="${ingredientsError}">
+                            <div th:text="${ingredientsError}"></div>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <hr/>
+                <h4 class="mt-2">Опції підбору</h4>
+                <div class="form-check-inline mt-4 mb-3">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="selectionMode" value="full" checked>Повний збіг
+                    </label>
+                </div>
+                <div class="form-check-inline">
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" name="selectionMode" value="oneFree">Дозволити додати один невказаний інгредієнт
+                    </label>
+                </div>
+                <div class="form-check mt-1 mb-4">
+                    <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input" name="usePLC" value="u" onclick="triggerCoef()">Застосувати співвідношення БЖВЦ
+                    </label>
+                </div>
+                <div class="form-group mt-1 mb-4">
+                    <div class="input-group" style="width: 33%;">
+                        <input type="number" id="proteinsCoef" name="proteinsCoef" class="form-control mr-1"
+                               placeholder="Б" min="0" max="50" disabled>
+                        <input type="number" id="lipidsCoef" name="lipidsCoef" class="form-control mr-1"
+                               placeholder="Ж" min="0" max="50" disabled>
+                        <input type="number" id="carboCoef" name="carboCoef" class="form-control mr-1"
+                               placeholder="В" min="0" max="50" disabled>
+                        <input type="number" id="sugarsCoef" name="sugarsCoef" class="form-control"
+                               placeholder="Ц%" min="0" max="100" disabled>
+                    </div>
+                </div>
+                <div class="form-check mt-1 mb-4">
+                    <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input" value="timeRestriction" onclick="triggerTimeRestrict()">Обмежити час приготування
+                    </label>
+                </div>
+                <div class="form-group mt-3 mb-4">
+                    <div class="input-group" style="width: 33%;">
+                        <input type="number" id="timeRestrictHour" name="timeRestrictHour" class="form-control mr-1"
+                               placeholder="годин" min="0" max="20" disabled>
+                        <input type="number" id="timeRestrictMinute" name="timeRestrictMinute" class="form-control"
+                               placeholder="хвилин" min="0" max="59" disabled>
+                    </div>
+                </div>
+                <hr/>
+                <div th:style="(${nutritionStyle} == 'sport')? 'display: block' : 'display: none' ">
+                    <h4 class="mt-2">Спортивні опції</h4>
+                    <div class="form-check mt-4 mb-4">
+                        <label class="form-check-label">
+                            <input type="checkbox" class="form-check-input" value="proteinWindow">Страва для білково-вуглеводного вікна
+                        </label>
+                    </div>
+                    <hr/>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success">Почати підбір</button>
+                </div>
+            </form>
+        </div>
+    </main>
+    <br>
+    <footer class="footer" style="padding-bottom: 0px; margin-bottom: 0px; bottom: 0px; width: 100%;">
+        <div class="container-fluid bg-dark text-center" style="width: 100%;">
+            <span class="text-muted">©All rights reserved 2020-2021</span>
+        </div>
+    </footer>
+</div>
+</body>
+</html>
+
+

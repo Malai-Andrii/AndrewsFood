@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ua" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Andrew`s Food</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#locales").change(function () {
+                var selectedOption = $('#locales').val();
+                if (selectedOption != ''){
+                    window.location.replace('?lang=' + selectedOption);
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+<main>
+    <div class="container mt-5">
+        <select id="locales">
+            <option value=""></option>
+            <option value="en" th:text="#{lang.en}"></option>
+            <option value="ua" th:text="#{lang.ua}"></option>
+        </select>
+        <div class="card-deck">
+            <div class="card">
+                <img th:src="@{/img/fridge.jpg}" class="card-img-top" alt="Card image">
+                <div class="card-body text-center">
+                    <div style="height: 80%;">
+                        <h4 class="card-title" th:text="#{greeting.firstIconText}">Що в холодильнику?</h4>
+                        <p class="card-text" th:text="#{greeting.firstUndertext}">Отримайте інструкції, як правильно отримати перелік страв за інгредієнтами</p>
+                    </div>
+                    <a th:href="@{/firstArticle}" class="btn btn-success">Детальніше</a>
+                </div>
+            </div>
+            <div class="card">
+                <img th:src="@{/img/calculator.jpg}" class="card-img-top" alt="Card image">
+                <div class="card-body text-center">
+                    <div style="height: 80%;">
+                        <h4 class="card-title" th:text="#{greeting.secondIconText}">Ваше меню підбере... робот.</h4>
+                        <p class="card-text" th:text="#{greeting.secondUndertext}">Дізнайтея, як правильно ввести свої дані та позбавитися роздумів "що приготувати"</p>
+                    </div>
+                    <a th:href="@{/secondArticle}" class="btn btn-success">Детальніше</a>
+                </div>
+            </div>
+            <div class="card">
+                <img th:src="@{/img/pencil.jpg}" class="card-img-top" alt="Card image">
+                <div class="card-body text-center">
+                    <div style="height: 80%;">
+                        <h4 class="card-title">Res Publica</h4>
+                        <p class="card-text" th:text="#{greeting.thirdUndertext}">Довідайтеся, як долучитися до нашої справи прямо зараз</p>
+                    </div>
+                    <a th:href="@{/thirdArticle}" class="btn btn-success">Детальніше</a>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4">
+    <span>Для використання найкращих функцій нашого сайту та орієнтування саме під ваші потреби,
+        дуже просимо авторизуватися, або створити свій акаунт, якщо Ви ще не з нами!</span>
+        </div>
+        <div class="form-row text-center mt-4">
+            <div class="col-12">
+                <a th:href="@{/mainUser}" class="btn btn-success">Увійти!</a>
+                <br/>
+                <div class="mt-1">
+                    <a th:href="@{/registration}">Створити акаунт!</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<br>
+<footer class="footer mt-5" style="width: 100%;">
+    <div class="container-fluid bg-dark text-center">
+        <span class="text-muted">©All rights reserved 2020-2021</span>
+    </div>
+</footer>
+</body>
+</html>

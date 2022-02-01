@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ua" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Нові рецепти від користувачів</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body style="background-color: rgb(53, 156, 53);">
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="collapse navbar-collapse" id="navb">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/mainAdmin}">Головна</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)">Всі інгредієнти</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)">Всі рецепти</a>
+                </li>
+            </ul>
+            <div>
+                <span style="margin-right: 10px; color: white;">Адмін</span>
+                <a href="#" class="btn btn-success text-white">Вийти</a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <div class="container mt-5 p-5 bg-white" style="border-radius: 20px;">
+        <div class="container" id="nothingDiv" style="display: none;">
+            <h1>Поки ніхто не пропонував якоїсь страви!</h1>
+        </div>
+        <h2>Пропозиції:</h2>
+        <hr>
+        <div class="container m-2 p-3">
+            <div class="row">
+                <div class="col-4 text-center">
+                    <img src="C:\Users\Andik\source\repos\icons\For_site.png" width="100%" height="100%">
+                </div>
+                <div class="col-8">
+                    <h3>Салат "Цезар"</h3>
+                    <br/>
+                    <p>Автор: <strong>Андрій</strong></p>
+                    <p>Дата пропонування: <strong>17.08.2020</strong></p>
+                    <p>Інгредієнти</p>
+                    <ul>
+                        <li>Томат</li>
+                        <li>Огірок</li>
+                        <li>Цибуля</li>
+                        <li>...</li>
+                    </ul>
+                    <a href="#" class="btn btn-outline-success">Детальніше</a>
+                    <a href="#" class="btn btn-success">Прийняти</a>
+                    <a href="#" class="btn btn-danger">Відхилити</a>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="container m-2 p-3">
+            <div class="row">
+                <div class="col-4 text-center">
+                    <img src="C:\Users\Andik\source\repos\icons\For_site.png" width="100%" height="100%">
+                </div>
+                <div class="col-8">
+                    <h3>Салат "Цезар"</h3>
+                    <br/>
+                    <p>Автор: <strong>Андрій</strong></p>
+                    <p>Дата пропонування: <strong>17.08.2020</strong></p>
+                    <p>Інгредієнти</p>
+                    <ul>
+                        <li>Томат</li>
+                        <li>Огірок</li>
+                        <li>Цибуля</li>
+                        <li>...</li>
+                    </ul>
+                    <a href="#" class="btn btn-outline-success">Детальніше</a>
+                    <a href="#" class="btn btn-success">Прийняти</a>
+                    <a href="#" class="btn btn-danger">Відхилити</a>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="container m-2 p-3">
+            <div class="row">
+                <div class="col-4 text-center">
+                    <img src="C:\Users\Andik\source\repos\icons\For_site.png" width="100%" height="100%">
+                </div>
+                <div class="col-8">
+                    <h3>Салат "Цезар"</h3>
+                    <br/>
+                    <p>Автор: <strong>Андрій</strong></p>
+                    <p>Дата пропонування: <strong>17.08.2020</strong></p>
+                    <p>Інгредієнти</p>
+                    <ul>
+                        <li>Томат</li>
+                        <li>Огірок</li>
+                        <li>Цибуля</li>
+                        <li>...</li>
+                    </ul>
+                    <a href="#" class="btn btn-outline-success">Детальніше</a>
+                    <a href="#" class="btn btn-success">Прийняти</a>
+                    <a href="#" class="btn btn-danger">Відхилити</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<br>
+<footer class="footer" style="padding-bottom: 0px; margin-bottom: 0px; bottom: 0px;">
+    <div class="container-fluid bg-dark text-center" style="height: 100%;">
+        <span class="text-muted">©All rights reserved 2020-2021</span>
+    </div>
+</footer>
+</body>
+</html>
+
+

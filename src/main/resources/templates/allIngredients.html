@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ua" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Всі інгредієнти</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        a.nav-link:link {
+            color: black;
+            background-color: transparent;
+            text-decoration: none;
+        }
+
+        a.nav-link:focus {
+            color: rgb(53, 156, 53);
+            background-color: transparent;
+            text-decoration: none;
+        }
+        a.nav-link:visited {
+            color: black;
+            background-color: transparent;
+            text-decoration: none;
+        }
+
+        a.nav-link:hover {
+            color: rgb(53, 156, 53);
+            background-color: transparent;
+            text-decoration: none;
+        }
+
+        a.nav-link:active {
+            color: rgb(53, 156, 53);
+            background-color: transparent;
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
+</head>
+<body style="background-color: rgb(53, 156, 53);">
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="collapse navbar-collapse" id="navb">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/mainAdmin}">Головна</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/allDishes}">Всі рецепти</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="javascript:void(0)">Всі інгредієнти</a>
+                </li>
+            </ul>
+            <div>
+                <span style="margin-right: 10px; color: white;">Користувач</span>
+                <a href="#" class="btn btn-success text-white">Вийти</a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <div class="container mt-5 p-5 bg-white" style="border-radius: 20px;">
+        <h2>Оберіть цікаву Вам категорію: </h2>
+        <br>
+
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item" th:each="category : ${categories}">
+                <a class="nav-link" data-toggle="tab" th:classappend="${categoryStat.first}? 'active' : ''" th:href="'#cat' + ${categoryStat.count}" th:text="${category}">Крупи</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="container tab-pane" th:each="category : ${categories}" th:id="'cat' + ${categoryStat.count}" th:classappend="${categoryStat.first}? 'active' : ''"><br>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="p-2 m-2" style="border: 2px solid rgba(210, 212, 210, 0.5); border-radius: 20px;"
+                             th:each="ingredient : ${ingredients}" th:if="${ingredientStat.odd} and (${ingredient.category} == ${category})">
+                            <div class="row">
+                                <div class="col-7 text-center">
+                                    <img th:src="@{${ingredient.ImagePath}}" width="100%" height="100%">
+                                </div>
+                                <div class="col-5 text-right">
+                                    <h4 th:text="${ingredient.ingredientName}">Макарон</h4>
+                                    <p>Калорійність: <strong th:text="${ingredient.calority} + 'ккал'"></strong></p>
+                                    <p>Білки: <strong th:text="${ingredient.proteins} + 'г'"></strong></p>
+                                    <p>Жири: <strong th:text="${ingredient.lipids} + 'г'"></strong></p>
+                                    <p>Вуглеводи: <strong th:text="${ingredient.carbo} + 'г'"></strong></p>
+                                    <p>З них цукри: <strong th:text="${ingredient.sugars} + 'г'"></strong></p>
+                                    <a href="javascript:void(0)" class="btn btn-success">Детальніше</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="p-2 m-2" style="border: 2px solid rgba(210, 212, 210, 0.5); border-radius: 20px;"
+                             th:each="ingredient : ${ingredients}" th:if="${ingredientStat.even} and (${ingredient.category} ==  ${category})">
+                            <div class="row">
+                                <div class="col-7 text-center">
+                                    <img th:src="@{${ingredient.ImagePath}}" width="100%" height="100%">
+                                </div>
+                                <div class="col-5 text-right">
+                                    <h4 th:text="${ingredient.ingredientName}">Макарон</h4>
+                                    <p>Калорійність: <strong th:text="${ingredient.calority} + 'ккал'"></strong></p>
+                                    <p>Білки: <strong th:text="${ingredient.proteins} + 'г'"></strong></p>
+                                    <p>Жири: <strong th:text="${ingredient.lipids} + 'г'"></strong></p>
+                                    <p>Вуглеводи: <strong th:text="${ingredient.carbo} + 'г'"></strong></p>
+                                    <p>З них цукри: <strong th:text="${ingredient.sugars} + 'г'"></strong></p>
+                                    <a href="javascript:void(0)" class="btn btn-success">Детальніше</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<br>
+<footer class="footer" style="padding-bottom: 0px; margin-bottom: 0px; bottom: 0px;">
+    <div class="container-fluid bg-dark text-center" style="height: 100%;">
+        <span class="text-muted">©All rights reserved 2020-2021</span>
+    </div>
+</footer>
+</body>
+</html>
+
+

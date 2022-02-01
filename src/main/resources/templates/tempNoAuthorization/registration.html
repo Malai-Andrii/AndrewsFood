@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ua" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Registration</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link th:href="@{/styles/registrationStyle.css}" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/registrationScript.js}"></script>
+</head>
+<body>
+<main>
+    <div class="container mt-5 p-5 main-container">
+        <div class="container">
+            <!-- <br/> -->
+            <fieldset>
+                <legend id="imtLegend" class="higher-text">ІМТ: нормальним діапазоном є від 18.5 та 25</legend>
+                <p id="imtText">Для відображення ІМТ, потрібно ввести вагу, зріст, вік та стать</p>
+            </fieldset>
+            <hr/>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-6">
+                    <p class="higher-text">Особисті дані</p>
+                </div>
+                <div class="col-6">
+                    <p class="higher-text">Гастрономічні уподобання</p>
+                </div>
+            </div>
+            <br/>
+            <!-- <hr> -->
+            <form th:action="@{/registration}" method="post">
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="email">Введіть ваш е-mail:</label>
+                            <input type="text" class="form-control" id="email" placeholder="example@mail.com" name="email" onchange="checkMail(this.value)">
+                            <div class="invalid-feedback" th:if="${emailError}" th:text="${emailError}">
+                                Введені дані не є електронною адресою.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Ваше ім'я:</label>
+                            <input type="text" class="form-control" id="username" name="username">
+                            <div class="invalid-feedback" th:if="${usernameError}" th:text="${usernameError}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="sex">Стать:</label>
+                            <select class="form-control" id="sex" name="sex"
+                                    th:value="${customUserDetails} ? ${customUserDetails.sex} : 'Не вказано'"
+                                    onchange="return IMTandCalority()">
+                                <option value="male">Чоловіча</option>
+                                <option value="female">Жіноча</option>
+                                <option value="none">Не вказано</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="age">Вік:</label>
+                            <input type="number" class="form-control" id="age" name="age" min="16" max="120" onchange="checkValue(this.id); generateCalority()"
+                                   th:classappend="${ageError} ? 'is-invalid' : ''"
+                                   th:value="${customUserDetails} ? ${customUserDetails.age} : ''">
+                            <div class="invalid-feedback" th:if="${ageError}" th:text="${ageError}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="height">Зріст (см):</label>
+                            <input type="number" class="form-control" id="height" name="height" min="50" max="250" onchange="checkValue(this.id); IMTandCalority()"
+                                   th:classappend="${heightError} ? 'is-invalid' : ''"
+                                   th:value="${customUserDetails} ? ${customUserDetails.height} : ''">
+                        </div>
+                        <div class="form-group">
+                            <label for="weight">Вага (кг):</label>
+                            <input type="number" class="form-control" id="weight" name="weight" min="30" max="250" onchange="checkValue(this.id); IMTandCalority()"
+                                   th:classappend="${weightError} ? 'is-invalid' : ''"
+                                   th:value="${customUserDetails} ? ${customUserDetails.weight} : ''">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Придумайте пароль:</label>
+                            <input type="password" class="form-control" id="password" name="password"
+                                   onchange="checkPass(this.value); checkPassConfirm(document.getElementById('passwordConfirm').value)"
+                                   th:classappend="${passwordError} ? 'is-invalid' : ''">
+                            <div class="invalid-feedback" id="passwordFeedback">
+                                description.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Повторіть пароль:</label>
+                            <input type="password" class="form-control" id="passwordConfirm" name="passwordConfirm" onchange="checkPassConfirm(this.value)">
+                            <div class="invalid-feedback">
+                                Паролі не збігаються.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group" id="nutrition_div">
+                            <label for="nutritionStyle">Стиль харчування:</label>
+                            <select class="form-control" id="nutritionStyle" name="nutritionStyle" onchange="triggerSportDisplay(); PLCandCalority();"
+                                    th:value="${customUserDetails} ? ${customUserDetails.nutritionStyle} : 'usual'">
+                                <option value="usual" id="usual">Звичайний</option>
+                                <option value="vegan" id="vegan">Веганство</option>
+                                <option value="vegetarian" id="vegetarian">Вегетеріанство</option>
+                                <option value="redutarian" id="redutarian">Редутаріанство</option>
+                                <option value="sport" id="sport">Спортивний</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="life_div">
+                            <label for="lifeStyle">Спосіб життя:</label>
+                            <select class="form-control" id="lifeStyle" name="lifeStyle" onchange="triggerLifeDisplay(); PLCandCalority();"
+                                    th:value="${customUserDetails} ? ${customUserDetails.lifeStyle} : 'moderate'">
+                                <option value="sedentary" id="sedentary">Сидячий</option>
+                                <option value="moderate" id="moderate">Поміркований (побутова активність)</option>
+                                <option value="medium" id="medium">Середній(3-5 занять на тиждень)</option>
+                                <option value="active" id="active">Активний(інтенсивні навантаженя, 6-7 занять на тиждень)</option>
+                                <option value="sportive" id="sportive">Спортсмен</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="bodyConstitutionDiv" style="display: none;">
+                            <label for="bodyConstitution">Тип тілобудови:</label>
+                            <select class="form-control" id="bodyConstitution" name="bodyConstitution" onchange="return generatePLC()"
+                                    th:value="${customUserDetails} ? ${customUserDetails.bodyConstitution} : 'ectomorph'">
+                                <option value="ectomorph">Ектоморф</option>
+                                <option value="mezomorph">Мезоморф</option>
+                                <option value="endomorph">Ендоморф</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="trainTypeDiv" style="display: none;">
+                            <label for="trainType">Тип тренування:</label>
+                            <select class="form-control" id="trainType" name="trainType" onchange="return generatePLC()"
+                                    th:value="${customUserDetails} ? ${customUserDetails.trainType} : 'mixed'">
+                                <option value="power">Силові вправи</option>
+                                <option value="cardio">Кардіо</option>
+                                <option value="mixed">Змішаний</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="religion">Релігійні обмеження:</label>
+                            <select class="form-control" id="religion" name="religion"
+                                    th:value="${customUserDetails} ? ${customUserDetails.religion} : 'none'">
+                                <option value="none">Нема</option>
+                                <option value="islam">Іслам</option>
+                                <option value="judaism">Юдаїзм</option>
+                                <option value="hinduism">Індуїзм</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="proteinsCoef">Білки/жири/вуглеводи/цукри:</label>
+                            <div class="input-group">
+                                <input type="number" id="proteinsCoef" name="proteinsCoef" class="form-control mr-1"
+                                       placeholder="Б" min="0" max="50" onchange="checkValue(this.id)"
+                                       th:value="${customUserDetails} ? ${customUserDetails.proteinsCoef} : '1'"
+                                       readonly>
+                                <input type="number" id="lipidsCoef" name="lipidsCoef" class="form-control mr-1"
+                                       placeholder="Ж" min="0" max="50" onchange="checkValue(this.id)"
+                                       th:value="${customUserDetails} ? ${customUserDetails.lipidsCoef} : '1'"
+                                       readonly>
+                                <input type="number" id="carboCoef" name="carboCoef" class="form-control mr-1"
+                                       placeholder="В" min="0" max="50" onchange="checkValue(this.id)"
+                                       th:value="${customUserDetails} ? ${customUserDetails.carboCoef} : '4'"
+                                       readonly>
+                                <input type="number" id="sugarsCoef" name="sugarsCoef" class="form-control"
+                                       placeholder="Ц%" min="0" max="100" onchange="checkValue(this.id)"
+                                       th:value="${customUserDetails} ? ${customUserDetails.sugarsCoef} : '10'"
+                                       readonly>
+                            </div>
+                            <div class="custom-control">
+                                <input type="checkbox" class="custom-checkbox" id="overwritePLC" value="" onclick="triggerCoef()">
+                                <label class="custom-control-label" for="overwritePLC">Перевизначити співвідношення БЖВЦ</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="calority">Щоденна калорійність:</label>
+                            <input type="number" class="form-control" id="calority" name="calority" min="1000" max="8000"
+                                   th:classappend="${calorityError} ? 'is-invalid' : ''"
+                                   th:value="${customUserDetails} ? ${customUserDetails.calority} : ''">
+                            <div class="invalid-feedback" th:if="${calorityError}" th:text="${calorityError}">
+                            </div>
+                            <div class="custom-control">
+                                <input type="checkbox" class="custom-checkbox" id="calorityAuto" name="calorityAuto" value="calorityAuto" onchange="triggerCalority()">
+                                <label class="custom-control-label" for="calorityAuto">Автоматичне визначення</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Медичні протипоказання:</label>
+                            <div class="custom-control">
+                                <input type="checkbox" class="custom-checkbox" id="contradiction1" name="NOMEAT" value="NOMEAT">
+                                <label class="custom-control-label" for="contradiction1">Заборона м'яса</label>
+                            </div>
+                            <div class="custom-control">
+                                <input type="checkbox" class="custom-checkbox" id="contradiction2" name="NOLACTOSE" value="NOLACTOSE">
+                                <label class="custom-control-label" for="contradiction2">Непереносимість лактози</label>
+                            </div>
+                            <div class="custom-control">
+                                <input type="checkbox" class="custom-checkbox" id="contradiction3" name="NOGLUTEN"  value="NOGLUTEN">
+                                <label class="custom-control-label" for="contradiction3">Непереносимість глютену</label>
+                            </div>
+                            <div class="custom-control">
+                                <input type="checkbox" class="custom-checkbox" id="contradiction4" name="NOFRY" value="NOFRY">
+                                <label class="custom-control-label" for="contradiction4">Заборона смаженого</label>
+                            </div>
+                            <div class="custom-control">
+                                <input type="checkbox" class="custom-checkbox" id="contradiction5" name="NOHOT" value="NOHOT">
+                                <label class="custom-control-label" for="contradiction5">Заборона гострого</label>
+                            </div>
+                            <div class="custom-control">
+                                <input type="checkbox" class="custom-checkbox" id="contradiction6" name="NOSUGAR" value="NOSUGAR">
+                                <label class="custom-control-label" for="contradiction6">Заборона цукру</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="col-4">
+
+                    </div>  -->
+                </div>
+                <br>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success mb-2">Зареєструватися!</button>
+                    <br>
+                    <a th:href="@{/login}">Назад</a>
+                </div>
+            </form>
+            <hr>
+        </div>
+    </div>
+</main>
+<br/>
+<footer class="footer" style="padding-bottom: 0px; margin-bottom: 0px; bottom: 0px;">
+    <div class="container-fluid bg-dark text-center" style="height: 100%;">
+        <span class="text-muted">©All rights reserved 2020-2022</span>
+    </div>
+</footer>
+</body>
+</html>
+
+

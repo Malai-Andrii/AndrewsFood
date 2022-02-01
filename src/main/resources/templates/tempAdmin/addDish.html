@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ua" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Додавання страви</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        var curFieldNameId = 0;
+        var curShownDiv = "молочні продуктиDiv";
+        function deleteField(a) {
+            var contDiv = a.parentNode.parentNode;
+            contDiv.parentNode.removeChild(contDiv);
+            return false;
+        }
+        function triggerType() {
+            if (document.getElementById("dishType").value == 'soup') {
+                document.getElementById("litreDiv").style.display = "block";
+            }
+            else {
+                document.getElementById("litreDiv").style.display = "none";
+            }
+            return false;
+        }
+        function removeHint(parent, hint){
+            var optionForRemove = document.getElementById(hint);
+            if (optionForRemove != null) {
+                document.getElementById(parent).removeChild(optionForRemove);
+            }
+            return false;
+        }
+
+        function selectCategory(selectedCategory){
+            var categoryDiv = selectedCategory + "Div";
+            var divForShow = document.getElementById(categoryDiv);
+            divForShow.style.display = "block";
+            document.getElementById(curShownDiv).style.display = "none";
+            curShownDiv = categoryDiv;
+            return false;
+        }
+
+        function addField(ingr) {
+            if (document.getElementById("ingredientAdder").innerHTML.includes(ingr + "</label>")) {
+                return false;
+            }
+            curFieldNameId++;
+
+            var divRow = document.createElement("div");
+            divRow.classList.add("container", "row");
+
+            var divCol1 = document.createElement("div");
+            divCol1.classList.add("container", "col-6", "text-left");
+
+            var divCol2 = document.createElement("div");
+            divCol2.classList.add("container", "col-6", "text-right", "input-group", "mb-1");
+
+            divCol1.innerHTML = '<label name="ingredient_text_'+ curFieldNameId +'" for="ingredient_'+ curFieldNameId +'">'+ ingr +'</label>'
+            + '<input type="hidden" name="ingredient_text_' + curFieldNameId + '" value="'+ ingr +'">';
+            divCol2.innerHTML = '<input id="ingredient_' + curFieldNameId + '" name="ingredient_' + curFieldNameId +  '" type="number" min="1" class="form-control"/>'
+                + '<div class="input-group-append" style="max-height: 38px;" onclick="return deleteField(this)" href="#"><button class="btn btn-danger btn-small" type="button">&times</button></div>';
+
+            divRow.appendChild(divCol1);
+            divRow.appendChild(divCol2);
+            document.getElementById("ingredientAdder").appendChild(divRow);
+
+            return false;
+        }
+    </script>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="collapse navbar-collapse" id="navb">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/mainAdmin}">Головна</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)">Всі інгредієнти</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)">Всі рецепти</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <div class="container mt-5 p-5 bg-white" style="border-radius: 20px;">
+        <form th:action="@{/mainAdmin/addDish}" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-3"></div>
+                <div class="col-6">
+                    <div class="text-center">
+                        <h5>Властивості страви</h5>
+                        <div class="alert alert-success alert-dismissible fade show" role="alert"
+                             th:text="${successSave}" th:if="${successSave}">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group">
+                        <label for="dishName">Назва страви:</label>
+                        <input type="text" class="form-control" id="dishName" name="dishName"
+                               th:classappend="${dishNameError} ? 'is-invalid' : ''"
+                               th:value="${dish} ? ${dish.dishName} : ''">
+                        <div class="invalid-feedback" th:if="${dishNameError}" th:text="${dishNameError}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="dishType">Категорія страви:</label>
+                        <input class="form-control" id="dishType" name="dishType" list="dishTypeList"
+                               onchange="return triggerType();"
+                               th:classappend="${dishTypeError} ? 'is-invalid' : ''">
+                        <datalist id="dishTypeList" th:value="${dish} ? ${dish.dishType} : ''">
+                            <option  th:each="dishType: ${dishTypes}" th:value="${dishType}" th:text="${dishType}"></option>
+                        </datalist>
+                        <div class="invalid-feedback" th:if="${dishTypeError}" th:text="${dishTypeError}">
+                        </div>
+                    </div>
+                    <div class="form-group" id="litreDiv" style="display: none;">
+                        <label for="dishLitre">Скільки літрів води додається:</label>
+                        <input type="number" class="form-control" id="dishLitre" name="dishLitre" min="0" max="20"
+                               th:classappend="${dishLitreError} ? 'is-invalid' : ''"
+                               th:value="${dish} ? ${dish.dishLitre} : ''">
+                        <div class="invalid-feedback" th:if="${dishLitreError}" th:text="${dishLitreError}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Час приготування</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" id="cookTimeHour" name="cookTimeHour"
+                                   placeholder="годин" min="0" max="20"
+                                   th:classappend="${cookTimeHourError} ? 'is-invalid' : ''" th:value="${dish} ? ${dish.cookTimeHour} : ''">
+                            <div class="invalid-feedback" th:if="${cookTimeHourError}" th:text="${cookTimeHourError}">
+                            </div>
+                            <input type="number" class="form-control ml-1" id="cookTimeMinute" name="cookTimeMinute"
+                                   placeholder="хвилин" min="0" max="60"
+                                   th:classappend="${cookTimeMinuteError} ? 'is-invalid' : ''" th:value="${dish} ? ${dish.cookTimeMinute} : ''">
+                            <div class="invalid-feedback" th:if="${cookTimeMinuteError}" th:text="${cookTimeMinuteError}">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="ingredientAdder">
+                        <div class="form-group">
+                            <label for="category">Категорія інгредієнту:</label>
+                            <select class="form-control" id="category" name="category" onchange="return selectCategory(this.value);">
+                                <option th:each="category: ${categories}" th:value="${category}" th:text="${category}">Овочі</option>
+                            </select>
+                        </div>
+                        <div class="form-group" th:each="category, categoryStat : ${categories}"
+                             th:id="${category} + 'Div'" th:style="${categoryStat.first}? 'display: block' : 'display: none'">
+                            <label th:for="${category}">Інгредієнт:</label>
+                            <select class="form-control" th:id="${category}" th:name="${category}"
+                                    th:attr="onchange=|removeHint('${category}' , 'ingredientForRemove' + '${category}'); addField(this.value);|">
+                                <option value="select" th:id="ingredientForRemove + ${category}">Оберіть елемент</option>
+                                <option th:each="ingredient, ingredientStat : ${ingredients}"
+                                        th:text="${ingredient.ingredientName}" th:value="${ingredient.ingredientName} + ' (' + ${ingredient.unitMeasure} + '):'" th:if="${ingredient.category} == ${category}">Огірок</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Список інгредієнтів:</label>
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert"
+                                 th:if="${ingredientsError}">
+                                <div th:text="${ingredientsError}"></div>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="cookMethod">Спосіб приготування:</label>
+                        <textarea class="form-control" id="cookMethod" name="cookMethod" rows="5"
+                                  th:classappend="${cookMethodError} ? 'is-invalid' : ''"
+                                  th:value="${dish} ? ${dish.cookMethod} : ''"></textarea>
+                        <div class="invalid-feedback" th:if="${cookMethodError}" th:text="${cookMethodError}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="dishContradictions">Особливості страви:</label>
+                        <div class="form-check" id="dishContradictions">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" name="NOFRY" value="NOFRY">Потребує смаження
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="videoLink">Посилання на відео:</label>
+                        <input type="text" class="form-control" id="videoLink" name="videoLink">
+                    </div>
+                    <div class="form-group">
+                        <label for="fileImg">Завантажте картинку:</label>
+                        <input type="file" id="fileImg" name="imageIngr" accept="image/png, image/jpeg">
+                    </div>
+                </div>
+                <div class="col-3"></div>
+            </div>
+            <br>
+            <div class="text-center">
+                <button type="submit" class="btn btn-success">Зберегти</button>
+            </div>
+        </form>
+        <hr>
+    </div>
+    </div>
+</main>
+<br>
+<footer class="footer" style="padding-bottom: 0px; margin-bottom: 0px; bottom: 0px;">
+    <div class="container-fluid bg-dark text-center" style="height: 100%;">
+        <span class="text-muted">©All rights reserved 2020-2021</span>
+    </div>
+</footer>
+</body>
+</html>

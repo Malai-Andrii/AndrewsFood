@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ua" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Реєстрація адміна</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        .form-control:focus {
+            border-color:rgba(0, 220, 0, 0.9);
+            box-shadow: 0 0 4px rgba(0, 220, 0, 0.9), 0 0 6px rgba(0, 220, 0, 0.5);
+        }
+    </style>
+</head>
+<body style="background-color: rgb(53, 156, 53);">
+
+<main>
+    <div class="container mt-5 p-5 bg-white" style="border-radius: 20px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-3">
+                </div>
+                <div class="col-6 text-center">
+                    <h5>Особисті дані</h5>
+                    <hr>
+                </div>
+                <div class="col-3">
+                </div>
+            </div>
+            <form th:action="@{/adminreg}" method="post">
+                <div class="row">
+                    <div class="col-3">
+                    </div>
+                    <div class="col-6">
+                        <div th:if="${messageUserExists}">
+                            <p>Bad connection with DB.</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Ваше ім'я:</label>
+                            <input type="text" class="form-control" th:classappend="${usernameError} ? 'is-invalid' : ''"
+                                   th:value="${user} ? ${user.username} : ''"
+                                   id="username" name="username">
+                            <div class="invalid-feedback" th:if="${usernameError}" th:text="${usernameError}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Придумайте пароль:</label>
+                            <input type="password" class="form-control" th:classappend="${passwordError} ? 'is-invalid' : ''"
+                                   id="password" name="password">
+                            <div class="invalid-feedback" th:if="${passwordError}" th:text="${passwordError}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="passwordConfirm">Повторіть пароль:</label>
+                            <input type="password" class="form-control" th:classappend="${passwordConfirmError} ? 'is-invalid' : ''"
+                                   id="passwordConfirm" name="passwordConfirm">
+                            <div class="invalid-feedback" th:if="${passwordConfirmError}" th:text="${passwordConfirmError}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="controlSequence">Введіть контрольну послідовність:</label>
+                            <input type="password" class="form-control"
+                                   th:classappend="${secretError} ? 'is-invalid' : ''"
+                                   id="controlSequence" name="controlSequence">
+                            <div class="invalid-feedback" th:if="${secretError}" th:text="${secretError}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                    </div>
+                </div>
+                <br>
+                <div class="text-center">
+                    <input type="submit" value="Зареєструватися!" class="btn btn-success mb-2"></input>
+                </div>
+            </form>
+            <hr>
+        </div>
+    </div>
+    </div>
+</main>
+<br>
+<footer class="footer" style="padding-bottom: 0px; margin-bottom: 0px; bottom: 0px;">
+    <div class="container-fluid bg-dark text-center" style="height: 100%;">
+        <span class="text-muted">©All rights reserved 2020-2021</span>
+    </div>
+</footer>
+</body>
+</html>
+
+

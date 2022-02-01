@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ua" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Редагування юзерів</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        a:link {
+            color: black;
+            background-color: transparent;
+            text-decoration: none;
+        }
+
+        a:focus {
+            color: rgb(53, 156, 53);
+            background-color: transparent;
+            text-decoration: none;
+        }
+        a:visited {
+            color: black;
+            background-color: transparent;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: rgb(53, 156, 53);
+            background-color: transparent;
+            text-decoration: none;
+        }
+
+        a:active {
+            color: rgb(53, 156, 53);
+            background-color: transparent;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body style="background-color: rgb(53, 156, 53);">
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="collapse navbar-collapse" id="navb">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/mainAdmin}">Головна</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)">Всі інгредієнти</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)">Всі рецепти</a>
+                </li>
+            </ul>
+            <div>
+                <span style="margin-right: 10px; color: white;">Адмін</span>
+                <a href="#" class="btn btn-success text-white">Вийти</a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <div class="container mt-5 p-5 bg-white" style="border-radius: 20px;">
+        <h3>Загальні дані:</h3>
+        <hr align="left" style="width: 50vh;"/>
+        <p>Загальна кількість користувачів: <span th:text="${allUsers}"></span></p>
+        <p>Середній вік: <span th:text="${avgAge}"></span></p>
+        <p>Середня калорійність: <span th:text="${avgCalority}"></span></p>
+        <p>Середній зріст: <span th:text="${avgHeight}"></span></p>
+        <p>Середня вага: <span th:text="${avgWeight}"></span></p>
+        <p>Найпоширеніша тілобудова: <span th:text="${commonBodyConstitution}"></span></p>
+        <p>Найпоширеніший стиль харчування: <span th:text="${commonNutritionStyle}"></span></p>
+        <hr align="left" style="width: 50vh;"/>
+        <h3>Інформація про користувачів:</h3>
+        <br/>
+        <div class="table-responsive text-center">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Ім'я користувача</th>
+                    <th>Email</th>
+                    <th>Стать</th>
+                    <th>Вік</th>
+                    <th>Зріст</th>
+                    <th>Вага</th>
+                    <th>Стиль харчування</th>
+                    <th>Тілобудова</th>
+                    <th>Тип вправ</th>
+                    <th>Релігійні обмеження</th>
+                    <th>Щоденна калорійність</th>
+                    <th>Протипоказання</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:value="${user.username}" th:text="${user.username}">Андрій</td>
+                    <td th:value="${user.customUserDetails.email}"
+                        th:text="${user.customUserDetails.email}">some@gmail.com</td>
+                    <td th:value="${user.customUserDetails.sex}"
+                        th:text="${user.customUserDetails.sex}">чоловіча</td>
+                    <td th:value="${user.customUserDetails.age}"
+                        th:text="${user.customUserDetails.age}">18</td>
+                    <td th:value="${user.customUserDetails.height}"
+                        th:text="${user.customUserDetails.height}">180 см</td>
+                    <td th:value="${user.customUserDetails.weight}"
+                        th:text="${user.customUserDetails.weight}">70 кг</td>
+                    <td th:value="${user.customUserDetails.nutritionStyle}"
+                        th:text="${user.customUserDetails.nutritionStyle}">Спортивний</td>
+                    <td th:value="${user.customUserDetails.bodyConstitution}"
+                        th:text="${user.customUserDetails.bodyConstitution}">Ектоморф</td>
+                    <td th:value="${user.customUserDetails.trainType}"
+                        th:text="${user.customUserDetails.trainType}">Кардіо</td>
+                    <td th:value="${user.customUserDetails.religion}"
+                        th:text="${user.customUserDetails.religion}">Немає</td>
+                    <td th:value="${user.customUserDetails.calority}"
+                        th:text="${user.customUserDetails.calority}">3000 ккал</td>
+                    <td>
+                        <ul>
+                            <li th:each="contra : ${user.customUserDetails.contradictions}"
+                                th:text="#{'contradiction.' + ${contra}}"></li>
+                        </ul>
+                    </td>
+                    <td>
+                        <form th:action="@{/mainAdmin/userDelete/{username}(username=${user.username})}" method="post">
+                            <input type="submit" class="btn btn-danger" value="Видалити"></input>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+</main>
+<br>
+<footer class="footer" style="padding-bottom: 0px; margin-bottom: 0px; bottom: 0px;">
+    <div class="container-fluid bg-dark text-center" style="height: 100%;">
+        <span class="text-muted">©All rights reserved 2020-2021</span>
+    </div>
+</footer>
+</body>
+</html>
+
+

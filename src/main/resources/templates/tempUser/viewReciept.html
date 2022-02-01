@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ua" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title th:text="${dish.dishName}">Перегляд рецепту</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        a#userProfile {
+            color: white;
+            background-color: transparent;
+            text-decoration: none;
+        }
+    </style>
+    <script>
+        var heartPressed = false;
+        $(function(){
+            $("#userProfile").mouseover(function(){
+                $("#userProfile").css("text-decoration", "underline");
+            })
+            $("#userProfile").mouseout(function(){
+                $("#userProfile").css("text-decoration", "none");
+            })
+        });
+
+        function triggerHeart() {
+            if (heartPressed == false) {
+                document.getElementById("heartImg").src = '/src/main/resources/icons/heart-red.svg';
+                heartPressed = true;
+            }
+            else {
+                document.getElementById("heartImg").src = '/src/main/resources/icons/heart.svg';
+                heartPressed = false;
+            }
+            return false;
+        }
+    </script>
+</head>
+<body style="background-color: rgb(53, 156, 53);">
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="collapse navbar-collapse" id="navb">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="javascript:void(0)">Головна</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)">Рецепти</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)">Інгредієнти</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:void(0)">Допомога</a>
+                </li>
+            </ul>
+            <div>
+                <span style="margin-right: 10px;"><a href="#" id="userProfile">Юзернейм</a></span>
+                <a href="#" class="btn btn-success text-white">Вийти</a>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <div class="container mt-5 p-5 bg-white" style="border-radius: 20px;">
+        <div class="d-flex justify-content-between">
+            <h1 th:text="${dish.dishName}">Назва страви</h1>
+            <img id="heartImg" class="mt-2" th:src="@{${dish.ImagePath}}"
+                 width="4%" height="4%" onclick="triggerHeart()"/>
+        </div>
+        <hr/>
+        <div class="row mb-5" id="topDiv">
+            <div class="col-4 text-center">
+                <img src="For_site.png" width="100%" height="100%">
+            </div>
+
+            <div class="col-3" id="ingredientId">
+                <span><strong>Інгредієнти:</strong></span>
+                <ul class="pl-4">
+                    <li th:each="ingred : ${dish.ingredientList}" th:text="${ingred.key} - ${ingred.value}" th:if="${ingredStat.count} < 13">Томат</li>
+                </ul>
+            </div>
+            <div class="col-5" id="ingredientId2">
+            <span style="float: right;">
+                <img src="/src/main/resources/icons/clock.svg" alt="clock">
+                </img>
+                <strong th:text="${hours} : ${minutes}"> 1 год. 30 хв.</strong>
+                <hr/>
+                <strong th:text="Калорійність: ${dish.dishCalority} Ккал.">Калорійність: 400 Ккал</strong>
+                <hr/>
+                <strong th:text="Білки: ${dish.dishProteins} г.">Білки: 400 г.</strong>
+                <hr/>
+                <strong th:text="Жири: ${dish.dishLipids} г.">Жири: 400 г.</strong>
+                <hr/>
+                <strong th:text="Вуглеводи: ${dish.dishCarbo} г.">Вуглеводи: 400 г.</strong>
+                <hr/>
+                <strong th:text="З них цукри: ${dish.dishSugars} г.">З них цукри: 400 г.</strong>
+            </span>
+                <ul class="pl-4">
+                    <li th:each="ingred : ${dish.ingredientList}" th:text="${ingred.key} - ${ingred.value}" th:if="${ingredStat.count} > 12 && ${ingredStat.count} < 26">Томат</li>
+                </ul>
+            </div>
+        </div>
+        <hr/>
+        <div class="container" id="bottomDiv" style="float:inline-start;">
+            <div class="text-center mb-4"><h3>Спосіб приготування</h3></div>
+            <div th:text="${dish.cookMethod}">
+                Тут описано метод приготування страви Тут описано метод приготування страви Тут описано метод приготування страви
+                Тут описано метод приготування страви Тут описано метод приготування страви Тут описано метод приготування страви
+                Тут описано метод приготування страви Тут описано метод приготування страви Тут описано метод приготування страви
+                Тут описано метод приготування страви Тут описано метод приготування страви Тут описано метод приготування страви
+                Тут описано метод приготування страви Тут описано метод приготування страви Тут описано метод приготування страви
+                Тут описано метод приготування страви Тут описано метод приготування страви Тут описано метод приготування страви
+                Тут описано метод приготування страви Тут описано метод приготування страви Тут описано метод приготування страви
+                Тут описано метод приготування страви Тут описано метод приготування страви Тут описано метод приготування страви
+            </div>
+        </div>
+        <hr/>
+        <div class="container text-center" id="videoDiv">
+            <iframe width="50%" height="315px" th:src="${dish.videoLink}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+        <hr/>
+        <div class="container text-center">
+            <a class="btn btn-success">Ок</a>
+        </div>
+    </div>
+</main>
+<br>
+<footer class="footer" style="padding-bottom: 0px; margin-bottom: 0px; bottom: 0px;">
+    <div class="container-fluid bg-dark text-center" style="height: 100%;">
+        <span class="text-muted">©All rights reserved 2020-2021</span>
+    </div>
+</footer>
+</body>
+</html>
+
+

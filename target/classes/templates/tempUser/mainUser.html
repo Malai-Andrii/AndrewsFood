@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ua" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Головна</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        a:link {
+            color: black;
+            background-color: transparent;
+            text-decoration: none;
+        }
+
+        a:focus {
+            color: rgb(53, 156, 53);
+            background-color: transparent;
+            text-decoration: none;
+        }
+        a:visited {
+            color: black;
+            background-color: transparent;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: rgb(53, 156, 53);
+            background-color: transparent;
+            text-decoration: none;
+        }
+
+        a:active {
+            color: rgb(53, 156, 53);
+            background-color: transparent;
+            text-decoration: underline;
+        }
+        a#userProfile {
+            color: white;
+            background-color: transparent;
+            text-decoration: none;
+        }
+    </style>
+    <script>
+        $(function(){
+            $("#userProfile").mouseover(function(){
+                $("#userProfile").css("text-decoration", "underline");
+            })
+            $("#userProfile").mouseout(function(){
+                $("#userProfile").css("text-decoration", "none");
+            })
+        });
+    </script>
+</head>
+<body style="background-color: rgb(53, 156, 53);">
+<header>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="collapse navbar-collapse" id="navb">
+            <div class="mr-auto">
+                <div th:include="pageParts/navbar :: navcopy">
+                </div>
+            </div>
+            <span style="margin-right: 10px;">
+                <a th:href="@{|/userSettings?username=${#httpServletRequest.remoteUser}|}" id="userProfile" th:inline="text">Вітаємо, [[${#httpServletRequest.remoteUser}]]!</a>
+            </span>
+            <div>
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" class="btn btn-success text-white" value="Вийти">
+                </form>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<main>
+    <div class="container mt-5 p-5 bg-white" style="border-radius: 20px;">
+        <a th:href="@{/mainUser/receiptSelection}">
+            <div class="container mt-5 mb-5 text-center" id="chooseReciept">
+                <div class="container mt-3 mb-3">
+                    <img th:src="@{/img/fridge.jpg}" class="rounded-circle" alt="chooseRecieptPic">
+                </div>
+                <h2>Підберіть рецепт за наявними інгредієнтами</h2>
+                <span>Просто введіть те, що є у Вас на кухні і ми підберемо найбільш відповідну Вам страву</span>
+            </div>
+        </a>
+        <hr/>
+        <a th:href="@{/mainUser/receiptDay}">
+            <div class="container mt-5 mb-5 text-center" id="dayPlan">
+                <div class="container mt-3 mb-3">
+                    <img th:src="@{/img/calculator.jpg}" class="rounded-circle" alt="dayPlanPic">
+                </div>
+                <h2>Ваше меню на цілий день!</h2>
+                <span>Забудьте про таку турботу як мозковий штурм "що приготувати сьогодні"</span>
+            </div>
+        </a>
+        <hr/>
+        <a href="#">
+            <div class="container mt-5 mb-5 text-center" id="createReciept">
+                <div class="container mt-3 mb-3">
+                    <img th:src="@{/img/pencil.jpg}" class="rounded-circle" alt="createRecieptPic">
+                </div>
+                <br/>
+                <h2>Поділіться своїм рецептом з іншими</h2>
+                <span>Наші адміни у найкоротші терміни розглянуть Вашу пропозицію. Зробіть внесок в нашу справу!</span>
+            </div>
+        </a>
+        <hr/>
+        <a href="#">
+            <div class="container mt-5 mb-5 text-center" id="likedReciepts">
+                <div class="container mt-3 mb-3">
+                    <img th:src="@{/img/heart_main.jpg}" class="rounded-circle" alt="createRecieptPic">
+                </div>
+                <br/>
+                <h2>Вподобані рецепти</h2>
+                <span>Не завжди є потреба у чомусь новому. Embrace tradition)</span>
+            </div>
+        </a>
+    </div>
+</main>
+<br>
+<footer class="footer" style="padding-bottom: 0px; margin-bottom: 0px; bottom: 0px;">
+    <div class="container-fluid bg-dark text-center" style="height: 100%;">
+        <span class="text-muted">©All rights reserved 2020-2021</span>
+    </div>
+</footer>
+</body>
+</html>
+
+

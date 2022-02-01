@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ua" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Авторизація</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        .form-control:focus {
+            border-color:rgba(0, 200, 0, 0.9);
+            box-shadow: 0 0 4px rgba(0, 200, 0, 0.9), 0 0 6px rgba(0, 200, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+<main>
+    <span style="font-size: 64px; font-weight: bold; color: darkgreen; margin-left: 3%;">Andrew`s Food</span>
+    <div class="container" style="margin-top: 4em;">
+        <div class="container">
+            <div class="row">
+                <div class="col-3"></div>
+                <div class="col-6">
+                    <div class="d-flex justify-content-center">
+                        <h1>Вітаємо!</h1>
+                    </div>
+                    <div th:if="${param.error}">
+                    <p style="color : red">Неправильний логін або пароль.</p>
+                    </div>
+                    <div class="alert" role="alert" th:text="${activateMessage}"
+                         th:classappend="${statusMessage} ? 'alert-success' : 'alert-danger'" th:if="${activateMessage}">
+                        This is a success alert—check it out!
+                    </div>
+                    <form th:action="@{/login}" method="post">
+                        <div class="form-group">
+                            <h3>Логін:</h3>
+                            <input type="text" class="form-control" id="username" placeholder="Введіть логін" name="username">
+                        </div>
+                        <div class="form-group">
+                            <h3>Пароль:</h3>
+                            <input type="password" class="form-control" id="password" placeholder="Введіть пароль" name="password">
+                        </div>
+                        <div class="form-group form-check">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" name="remember-me"> Запам'ятати мене
+                            </label>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <input type="submit" class="btn btn-success btn-lg" value="Увійти!"></input>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <a href="#" style="margin-top: 0.5em;">Забули пароль?</a>
+                        </div>
+                    </form>
+                    <br/>
+                </div>
+                <div class="col-3"></div>
+            </div>
+        </div>
+    </div>
+</main>
+<br>
+<footer class="footer" style="position: fixed; bottom: 0px; padding-bottom: 0px; margin-bottom: 0px; width: 100%;">
+    <div class="container-fluid bg-dark text-center" style="width: 100%;">
+        <span class="text-muted">©All rights reserved 2020-2021</span>
+    </div>
+</footer>
+</body>
+</html>
