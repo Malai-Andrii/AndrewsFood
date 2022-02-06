@@ -6,12 +6,12 @@ var sugarsCoef = "10";
 
 function triggerSportDisplay() {
     $(function() {
-        if ( $("#nutritionStyle").val() == 'sport') {
+        if ( $("#nutritionStyle").val() == 'SPORT') {
             $("#bodyConstitutionDiv").show();
             $("#trainTypeDiv").show();
             $("#sedentary").hide();
             $("#moderate").hide();
-            $("#lifeStyle").val('medium');
+            $("#lifeStyle").val('MEDIUM');
         }
         else {
             $("#sedentary").show();
@@ -24,18 +24,18 @@ function triggerSportDisplay() {
 }
 function triggerLifeDisplay() {
     $(function() {
-        if ($("#lifeStyle").val() == 'sportive') {
+        if ($("#lifeStyle").val() == 'SPORTIVE') {
             $("#usual").hide() ;
             $("#vegetarian").hide() ;
             $("#vegan").hide();
             $("#redutarian").hide();
-            $("#nutritionStyle").val('sport');
+            $("#nutritionStyle").val('SPORT');
         }
         else {
-            $("#usual").show(); ;
-            $("#vegetarian").show(); ;
-            $("#vegan").show(); ;
-            $("#redutarian").show(); ;
+            $("#usual").show();
+            $("#vegetarian").show();
+            $("#vegan").show();
+            $("#redutarian").show();
         }
         return false;
     })
@@ -116,31 +116,22 @@ function generatePLC() {
         var sexCoef = ($("#sex").val() == "male") ? 0 : 0.5;
         imtCoef = imtCoef.substring(imtCoef.length - imtCoef.lastIndexOf(':') - 1);
 
-
-        console.log(nutritionStyle);
-        console.log(bodyConstitution);
-        console.log(trainType);
-
-        console.log(nutritionStyle == "usual");
-        console.log(trainType == "power");
-        console.log(bodyConstitution == "ectomorph");
-
-        if (nutritionStyle == "usual") {setPLC(1, 1, 4, 10);}
-        else if (nutritionStyle == "sport") {
-            if (trainType == "power") {
-                if (bodyConstitution == "ectomorph") {setPLC(2, 1, 6, 15);}
-                else if (bodyConstitution == "mezomorph") {setPLC(2, 1, 5, 10);}
-                else if (bodyConstitution == "endomorph") {setPLC(2, 1, 4, 10);}
+        if (nutritionStyle == "USUAL") {setPLC(1, 1, 4, 10);}
+        else if (nutritionStyle == "SPORT") {
+            if (trainType == "POWER") {
+                if (bodyConstitution == "ECTO") {setPLC(2, 1, 6, 15);}
+                else if (bodyConstitution == "MESO") {setPLC(2, 1, 5, 10);}
+                else if (bodyConstitution == "ENDO") {setPLC(2, 1, 4, 10);}
             }
-            else if (trainType == "cardio") {
-                if (bodyConstitution == "ectomorph") {setPLC(1, 1, 6, 15);}
-                else if (bodyConstitution == "mezomorph") {setPLC(1, 1, 5, 10);}
-                else if (bodyConstitution == "endomorph") {setPLC(1, 1, 4, 10);}
+            else if (trainType == "CARDIO") {
+                if (bodyConstitution == "ECTO") {setPLC(1, 1, 6, 15);}
+                else if (bodyConstitution == "MESO") {setPLC(1, 1, 5, 10);}
+                else if (bodyConstitution == "ENDO") {setPLC(1, 1, 4, 10);}
             }
-            else if (trainType == "mixed") {
-                if (bodyConstitution == "ectomorph") {setPLC(2, 1, 6, 15);}
-                else if (bodyConstitution == "mezomorph") {setPLC(2, 1, 5, 10);}
-                else if (bodyConstitution == "endomorph") {setPLC(2, 1, 4, 10);}
+            else if (trainType == "MIXED") {
+                if (bodyConstitution == "ECTO") {setPLC(2, 1, 6, 15);}
+                else if (bodyConstitution == "MESO") {setPLC(2, 1, 5, 10);}
+                else if (bodyConstitution == "ENDO") {setPLC(2, 1, 4, 10);}
             }
         }
         // if (imtCoef < 30 - sexCoef) {return false;}
@@ -178,11 +169,11 @@ function generateCalority() {
                 BMR = 447.593 + (9.247 * W) + (3.098  * H) - (4.330 * A)
             }
             switch ($("#lifeStyle").val()) {
-                case "sedentary": AMR = 1.2; break;
-                case "moderate": AMR = 1.375; break;
-                case "medium": AMR = 1.55; break;
-                case "active" : AMR = 1.725; break;
-                case "sportive": AMR = 1.9; break;
+                case "SEDENTARY": AMR = 1.2; break;
+                case "MODERATE": AMR = 1.375; break;
+                case "MEDIUM": AMR = 1.55; break;
+                case "ACTIVE" : AMR = 1.725; break;
+                case "SPORTIVE": AMR = 1.9; break;
             }
             imtCoef = $("#imtLegend").html();
             imtCoef = imtCoef.substring(imtCoef.length - imtCoef.lastIndexOf(':') - 1);

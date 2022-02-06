@@ -1,7 +1,7 @@
 package com.site.andrewsfood.Controller.controllers;
 
 import com.site.andrewsfood.Controller.Utilities.ControllerUtils;
-import com.site.andrewsfood.Model.domain.Contradictions;
+import com.site.andrewsfood.Model.domain.enums.Contradictions;
 import com.site.andrewsfood.Model.domain.CustomUserDetails;
 import com.site.andrewsfood.Model.domain.User;
 import com.site.andrewsfood.Dao.UserRepo;
@@ -91,8 +91,6 @@ public class UserSettingsController {
             Set<String> contradictions = Arrays.stream(Contradictions.values())
                     .map(Contradictions::name)
                     .collect(Collectors.toSet());
-
-            form.
 
             for (String key : form.keySet()) {
                 if (contradictions .contains(key)) {

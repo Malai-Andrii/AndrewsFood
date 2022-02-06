@@ -1,6 +1,6 @@
 package com.site.andrewsfood.Model.service;
 
-import com.site.andrewsfood.Model.domain.Contradictions;
+import com.site.andrewsfood.Model.domain.enums.Contradictions;
 import com.site.andrewsfood.Model.domain.Dish;
 import com.site.andrewsfood.Service.DishService;
 import org.junit.Assert;

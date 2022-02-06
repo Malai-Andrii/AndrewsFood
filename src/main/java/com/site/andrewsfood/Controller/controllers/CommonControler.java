@@ -1,5 +1,7 @@
 package com.site.andrewsfood.Controller.controllers;
 
+import com.site.andrewsfood.Model.domain.Dish;
+import com.site.andrewsfood.Model.domain.Ingredient;
 import com.site.andrewsfood.Service.DishService;
 import com.site.andrewsfood.Service.IngredientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,17 @@ public class CommonControler {
         return "allIngredients";
     }
 
+    @GetMapping("/allIngredients/{ingredientId}")
+    public String allIngredientGet(@PathVariable("ingredientId") long ingredientId, Model model) {
+        Ingredient ingredient = ingredientService.findById(ingredientId);
+        if (ingredient == null) {
+            // EXCEPTION HANDLING REQUIRED!!! 404
+            System.out.println("look up");
+        }
+        else model.addAttribute("ingredients", ingredient);
+        return "allIngredients";
+    }
+
     @GetMapping("/allDishes")
     public String allDishGet(Model model) {
         model.addAttribute("dishes", dishService.getAllDishes());
@@ -46,7 +59,12 @@ public class CommonControler {
 
     @GetMapping("/allDishes/{dishId}")
     public String allDishGet(@PathVariable("dishId") long dishId, Model model) {
-        model.addAttribute("dishes", dishService.findById(dishId));
+        Dish dish = dishService.findById(dishId);
+        if (dish == null) {
+            // EXCEPTION HANDLING REQUIRED!!! 404
+            System.out.println("look up");
+        }
+        else model.addAttribute("dishes", dish);
         return "allDishes";
     }
 }

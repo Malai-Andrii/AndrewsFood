@@ -1,7 +1,9 @@
 package com.site.andrewsfood.Service;
 
 import com.site.andrewsfood.Model.domain.CustomUserDetails;
-import com.site.andrewsfood.Model.domain.Role;
+import com.site.andrewsfood.Model.domain.enums.BodyConstitution;
+import com.site.andrewsfood.Model.domain.enums.NutritionStyle;
+import com.site.andrewsfood.Model.domain.enums.Role;
 import com.site.andrewsfood.Model.domain.User;
 import com.site.andrewsfood.Dao.CustomUserDetailsRepo;
 import com.site.andrewsfood.Dao.UserRepo;
@@ -18,7 +20,6 @@ import java.util.Map;
 @Service
 public class UserService implements UserDetailsService {
     private final UserRepo userRepo;
-
     private final CustomUserDetailsRepo customUserDetailsRepo;
 
     public UserService(CustomUserDetailsRepo customUserDetailsRepo, UserRepo userRepo) {
@@ -31,7 +32,7 @@ public class UserService implements UserDetailsService {
     public void deleteAll() {userRepo.deleteAll();}
 
     public List<User> findAllUsers() {
-        return userRepo.findAllByRole(Role.USER);
+        return userRepo.findAllByRoleUser();
     }
 
     public User findUserByUsername(String name) {
@@ -42,10 +43,7 @@ public class UserService implements UserDetailsService {
         return userRepo.findById(id);
     }
 
-    public int AllUsers(){
-        List<User> users = userRepo.findAllByRole(Role.USER);
-        return users.size();
-    }
+    public long allUsersCount() { return userRepo.countAllByUserRole(); }
     public Integer AverageAge() { return userRepo.AvgAge(); }
     public Integer AverageCalority() {
         return userRepo.AvgCalority();
@@ -56,21 +54,22 @@ public class UserService implements UserDetailsService {
     public Integer AverageWeight() {
         return userRepo.AvgWeight();
     }
-    public String CommonBodyConstitution() {
-        Map<Integer, String> common = new HashMap();
-        common.put(userRepo.EctoBodyConstitution(), "Ектоморф");
-        common.put(userRepo.MezoBodyConstitution(), "Мезоморф");
-        common.put(userRepo.EndoBodyConstitution(), "Ендоморф");
-        int maxValue = Math.max(Math.max(userRepo.EctoBodyConstitution(), userRepo.MezoBodyConstitution()), userRepo.EndoBodyConstitution());
+    public BodyConstitution CommonBodyConstitution() {
+        Map<Integer, BodyConstitution> common = new HashMap<>();
+        common.put(userRepo.EctoBodyConstitution(), BodyConstitution.ECTO);
+        common.put(userRepo.MezoBodyConstitution(), BodyConstitution.MESO);
+        common.put(userRepo.EndoBodyConstitution(), BodyConstitution.ENDO);
+        int maxValue = Math.max(Math.max(userRepo.EctoBodyConstitution(),
+                userRepo.MezoBodyConstitution()), userRepo.EndoBodyConstitution());
         return common.get(maxValue);
     }
-    public String CommonNutritionStyle(){
-        Map<Integer, String> common = new HashMap();
-        common.put(userRepo.UsualNutritionStyle(), "Звичайний");
-        common.put(userRepo.VeganNutritionStyle(), "Веган");
-        common.put(userRepo.VegeterianNutritionStyle(), "Вегетеріанство");
-        common.put(userRepo.RedutarianNutritionStyle(), "Редутаріанство");
-        common.put(userRepo.SportNutritionStyle(), "Спортивний");
+    public NutritionStyle CommonNutritionStyle(){
+        Map<Integer, NutritionStyle> common = new HashMap<>();
+        common.put(userRepo.UsualNutritionStyle(), NutritionStyle.USUAL);
+        common.put(userRepo.VeganNutritionStyle(), NutritionStyle.VEGAN);
+        common.put(userRepo.VegeterianNutritionStyle(), NutritionStyle.VEGETARIAN);
+        common.put(userRepo.RedutarianNutritionStyle(), NutritionStyle.REDUTARIAN);
+        common.put(userRepo.SportNutritionStyle(), NutritionStyle.SPORT);
         int maxValue = Math.max(Math.max(Math.max(userRepo.UsualNutritionStyle(), userRepo.VeganNutritionStyle()),
                 Math.max(userRepo.VegeterianNutritionStyle(), userRepo.RedutarianNutritionStyle())), userRepo.SportNutritionStyle());
         return common.get(maxValue);

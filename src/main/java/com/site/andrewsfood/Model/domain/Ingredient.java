@@ -1,5 +1,6 @@
 package com.site.andrewsfood.Model.domain;
 
+import com.site.andrewsfood.Model.domain.enums.Contradictions;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
@@ -18,14 +19,24 @@ public class Ingredient {
     private String ingredientName;
     @NotBlank(message = "Категорію не вказано!")
     private String category;
+
+    @NotNull(message = "Вкажіть калорійність!")
     @Range(min = 0, max = 1000)
     private Double calority;
+
+    @NotNull(message = "Вкажість вміст білків!")
     @Range(min = 0, max = 100)
     private Double proteins;
+
+    @NotNull(message = "Вкажість вміст жирів!")
     @Range(min = 0, max = 100)
     private Double lipids;
+
+    @NotNull(message = "Вкажість вміст вуглеводів!")
     @Range(min = 0, max = 100)
     private Double carbo;
+
+    @NotNull(message = "Вкажість вміст цукрів!")
     @Range(min = 0, max = 100)
     private Double sugars;
 
@@ -45,14 +56,9 @@ public class Ingredient {
     else { return "/src/main/resources/photos/ingredient-photos/" + id + "/" + fileImg;}
     }
 
-//    private String fileType;
 
-//    @Lob
-//    private byte[] filename;
-//
     public Ingredient() {
     }
-
 
     public Ingredient(@NotBlank(message = "Введіть назву інгредієнта!") String ingredientName,
                       @NotBlank(message = "Категорію не вказано!") String category,

@@ -2,10 +2,12 @@ package com.site.andrewsfood.Controller.controllers;
 
 import com.site.andrewsfood.Controller.Utilities.ControllerUtils;
 import com.site.andrewsfood.Model.domain.*;
+import com.site.andrewsfood.Model.domain.enums.Contradictions;
+import com.site.andrewsfood.Model.domain.enums.NutritionStyle;
+import com.site.andrewsfood.Model.domain.enums.Religion;
 import com.site.andrewsfood.Service.DishService;
 import com.site.andrewsfood.Service.IngredientService;
 import com.site.andrewsfood.Service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,14 +19,15 @@ import java.util.*;
 
 @Controller
 public class ReceiptDayController {
-    @Autowired
-    private IngredientService ingredientService;
+    private final IngredientService ingredientService;
+    private final DishService dishService;
+    private final UserService userService;
 
-    @Autowired
-    private DishService dishService;
-
-    @Autowired
-    private UserService userService;
+    public ReceiptDayController(IngredientService ingredientService, DishService dishService, UserService userService) {
+        this.ingredientService = ingredientService;
+        this.dishService = dishService;
+        this.userService = userService;
+    }
 
     @GetMapping("/mainUser/receiptDay")
     public String receiptDayGet(Authentication authentication, Model model) {
@@ -96,8 +99,8 @@ public class ReceiptDayController {
 
         CustomUserDetails userDetails = user.getCustomUserDetails();
         Set<Contradictions> contras = userDetails.getContradictions();
-        String nutritionStyle = userDetails.getNutritionStyle();
-        String userReligion = userDetails.getReligion();
+        NutritionStyle nutritionStyle = userDetails.getNutritionStyle();
+        Religion userReligion = userDetails.getReligion();
         loop:
         for (int i=0; i < dishesAll.size(); ) {
             // Filtrating by contradictions
@@ -110,7 +113,7 @@ public class ReceiptDayController {
             // Filter by vegan, vegetarian etc.
             Map <String, Double> currentIngredients = currentDish.getIngredientList();
             Set<String> keyIngred = currentIngredients.keySet();
-            if (nutritionStyle.equals("редутаріанець")) {
+            if (nutritionStyle == NutritionStyle.REDUTARIAN) {
                 double wholeMass = 0.0;
                 double meatMass = 0.0;
                 for (String key : keyIngred) {
@@ -124,14 +127,16 @@ public class ReceiptDayController {
                     continue loop;
                 }
             }
-            else if (!nutritionStyle.equals("звичайний") && !nutritionStyle.equals("спорт")) {
+            else if (nutritionStyle != NutritionStyle.USUAL  && nutritionStyle != NutritionStyle.SPORT) {
                 for (String key : keyIngred) {
                     Ingredient ingred = ingredientService.findByIngredientName(key);
-                    if (ingred.getCategory().equals("м`ясні продукти") && nutritionStyle.equals("вегетеріанець")) {
+                    String ingredCategory = ingred.getCategory();
+                    if (ingredCategory.equals("м`ясні продукти") && nutritionStyle == NutritionStyle.VEGETARIAN) {
                         dishesAll.remove(i);
                         continue loop;
-                    } else if ((ingred.getCategory().equals("м`ясні продукти") || ingred.getCategory().equals("молочні продукти") ||
-                            ingred.getCategory().equals("яйця")) && nutritionStyle.equals("веган")) {
+                    } else if ((ingredCategory.equals("м`ясні продукти") ||
+                            ingredCategory.equals("молочні продукти") ||
+                            ingredCategory.equals("яйця")) && nutritionStyle == NutritionStyle.VEGAN) {
                         dishesAll.remove(i);
                         continue loop;
                     }
@@ -139,7 +144,7 @@ public class ReceiptDayController {
             }
 
             // Filtrating by religion.
-            if (userReligion.equals("іслам")) {
+            if (userReligion == Religion.ISLAM) {
                 for (String key : keyIngred) {
                     Ingredient ingred = ingredientService.findByIngredientName(key);
                     if (ingred.getIngredientName().toLowerCase().contains("свин")) {
@@ -148,7 +153,7 @@ public class ReceiptDayController {
                     };
                 }
             }
-            else if (userReligion.equals("юдаїзм")) {
+            else if (userReligion == Religion.JUDAISM) {
                 boolean containsMilk = false;
                 boolean containsMeat = false;
                 for (String key : keyIngred) {
@@ -169,12 +174,13 @@ public class ReceiptDayController {
                     }
                 }
             }
-            else if (userReligion.equals("індуїзм")) {
+            else if (userReligion == Religion.HINDUISM) {
                 for (String key : keyIngred) {
                     Ingredient ingred = ingredientService.findByIngredientName(key);
-                    if (ingred.getIngredientName().toLowerCase().contains("теля") ||
-                            ingred.getIngredientName().toLowerCase().contains("ялови") ||
-                            ingred.getIngredientName().toLowerCase().contains("коров")) {
+                    String ingredientName = ingred.getIngredientName().toLowerCase();
+                    if (ingredientName.contains("теля") ||
+                            ingredientName.contains("ялови") ||
+                            ingredientName.contains("коров")) {
                         dishesAll.remove(i);
                         continue loop;
                     };
@@ -184,7 +190,7 @@ public class ReceiptDayController {
         }
         // Now you have valid list with dishes
 
-        // Set time limitation, if needed
+        // Set a time limitation, if needed
         if (timeRestrict != null) {
             Iterator<Dish> dishIterator = dishesAll.iterator();
             while (dishIterator.hasNext()) {

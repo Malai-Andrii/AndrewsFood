@@ -1,10 +1,12 @@
 package com.site.andrewsfood.Controller.controllers;
 
 import com.site.andrewsfood.Model.domain.*;
+import com.site.andrewsfood.Model.domain.enums.Contradictions;
+import com.site.andrewsfood.Model.domain.enums.NutritionStyle;
+import com.site.andrewsfood.Model.domain.enums.Religion;
 import com.site.andrewsfood.Service.DishService;
 import com.site.andrewsfood.Service.IngredientService;
 import com.site.andrewsfood.Service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,14 +19,17 @@ import java.util.*;
 
 @Controller
 public class ReceiptSelectionController {
-    @Autowired
-    private IngredientService ingredientService;
+    private final IngredientService ingredientService;
 
-    @Autowired
-    private DishService dishService;
+    private final DishService dishService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public ReceiptSelectionController(IngredientService ingredientService, DishService dishService, UserService userService) {
+        this.ingredientService = ingredientService;
+        this.dishService = dishService;
+        this.userService = userService;
+    }
 
     @GetMapping("/mainUser/receiptSelection")
     public String receiptSelectionGet(Authentication authentication, Model model) {
@@ -51,8 +56,8 @@ public class ReceiptSelectionController {
         User user = userService.findUserByUsername(authentication.getName());
 
         // Get ingredients
-        List<String> ingredNames = new ArrayList<String>();
-        List<Double> amounts = new ArrayList<Double>();
+        List<String> ingredNames = new ArrayList<>();
+        List<Double> amounts = new ArrayList<>();
         Map<String, Double> ingredientsListCustom = new HashMap<>();
         for (String key : form.keySet()) {
             // get names
@@ -66,7 +71,7 @@ public class ReceiptSelectionController {
 
             else if (key.startsWith("ingredient_") && !key.startsWith("ingredient_name_")) {
                 try {
-                    Double amount = Double.parseDouble(form.get(key));
+                    double amount = Double.parseDouble(form.get(key));
                     if (amount <= 0.0) {
                         model.addAttribute("ingredientsError", "Маса інгредієнтів не може бути менша чи рівня нулю!");
                         model.addAttribute("categories", ingredientService.getCategoryList());
@@ -92,24 +97,21 @@ public class ReceiptSelectionController {
         List<Dish> dishesAll = dishService.getAllDishes();
 
         Set<Contradictions> contras = user.getCustomUserDetails().getContradictions();
-        Set<Contradictions> dishContras = new HashSet<Contradictions>();
-        String nutritionStyle;
+        NutritionStyle nutritionStyle = user.getCustomUserDetails().getNutritionStyle();
         loop:
         for (int i=0; i < dishesAll.size(); ) {
             // Filtrating by contradictions
 
             Dish currentDish = dishesAll.get(i);
-            dishContras = currentDish.getDishContradictions();
 
-            if (contras.contains(dishContras)) {
+            if (contras.contains(currentDish.getDishContradictions())) {
                 dishesAll.remove(i);
                 continue;
             }
             // Filter by vegan, vegetarian etc.
-            nutritionStyle = user.getCustomUserDetails().getNutritionStyle();
             Map <String, Double> currentIngredients = currentDish.getIngredientList();
             Set<String> keyIngred = currentIngredients.keySet();
-            if (nutritionStyle.equals("редутаріанець")) {
+            if (nutritionStyle == NutritionStyle.REDUTARIAN) {
                 double wholeMass = 0.0;
                 double meatMass = 0.0;
                 for (String key : keyIngred) {
@@ -123,14 +125,16 @@ public class ReceiptSelectionController {
                     continue loop;
                 }
             }
-            else if (!nutritionStyle.equals("звичайний") || !nutritionStyle.equals("спорт")) {
+            else if (nutritionStyle != NutritionStyle.USUAL && nutritionStyle != NutritionStyle.SPORT) {
                 for (String key : keyIngred) {
                     Ingredient ingred = ingredientService.findByIngredientName(key);
-                    if (ingred.getCategory().equals("м`ясні продукти") && nutritionStyle.equals("вегетеріанець")) {
+                    String ingredCategory = ingred.getCategory();
+                    if (ingredCategory.equals("м`ясні продукти") && nutritionStyle == NutritionStyle.VEGETARIAN) {
                         dishesAll.remove(i);
                         continue loop;
-                    } else if ((ingred.getCategory().equals("м`ясні продукти") || ingred.getCategory().equals("молочні продукти") ||
-                            ingred.getCategory().equals("яйця")) && nutritionStyle.equals("веган")) {
+                    } else if ((ingredCategory.equals("м`ясні продукти") ||
+                            ingredCategory.equals("молочні продукти") ||
+                            ingredCategory.equals("яйця")) && nutritionStyle == NutritionStyle.VEGAN) {
                         dishesAll.remove(i);
                         continue loop;
                     }
@@ -138,8 +142,8 @@ public class ReceiptSelectionController {
             }
 
             // Filtrating by religion.
-            String userReligion = user.getCustomUserDetails().getReligion();
-            if (userReligion.equals("іслам")) {
+            Religion userReligion = user.getCustomUserDetails().getReligion();
+            if (userReligion == Religion.ISLAM) {
                 for (String key : keyIngred) {
                     Ingredient ingred = ingredientService.findByIngredientName(key);
                     if (ingred.getIngredientName().toLowerCase().contains("свин")) {
@@ -148,7 +152,7 @@ public class ReceiptSelectionController {
                     };
                 }
             }
-            if (userReligion.equals("юдаїзм")) {
+            if (userReligion == Religion.JUDAISM) {
                 boolean containsMilk = false;
                 boolean containsMeat = false;
                 for (String key : keyIngred) {
@@ -169,12 +173,12 @@ public class ReceiptSelectionController {
                     }
                 }
             }
-            if (userReligion.equals("індуїзм")) {
+            if (userReligion == Religion.HINDUISM) {
                 for (String key : keyIngred) {
                     Ingredient ingred = ingredientService.findByIngredientName(key);
-                    if (ingred.getIngredientName().toLowerCase().contains("теля") ||
-                            ingred.getIngredientName().toLowerCase().contains("ялови") ||
-                            ingred.getIngredientName().toLowerCase().contains("коров")) {
+                    String ingredName = ingred.getIngredientName().toLowerCase();
+                    if (ingredName.contains("теля") || ingredName.contains("ялови") ||
+                            ingredName.contains("коров")) {
                         dishesAll.remove(i);
                         continue loop;
                     };
@@ -184,21 +188,16 @@ public class ReceiptSelectionController {
         }
          //Now you have valid list with dishes
 
-         //Set time limitation, if needed
+         //Set a time limitation, if needed
         if (timeRestriction != null) {
-            for (int i = 0; i < dishesAll.size(); ) {
-                String cookTime = dishesAll.get(i).getCookTime();
+            Iterator<Dish> dishIterator = dishesAll.iterator();
+            while (dishIterator.hasNext()) {
+                String cookTime = dishIterator.next().getCookTime();
                 int currentHours = Integer.parseInt(cookTime.substring(0, cookTime.lastIndexOf(':')));
                 int currentMinutes = Integer.parseInt(cookTime.substring(cookTime.lastIndexOf(':')));
-                if (hours < currentHours) {
-                    dishesAll.remove(i);
-                    continue;
+                if (hours < currentHours || (hours == currentHours && minutes < currentMinutes)) {
+                    dishIterator.remove();
                 }
-                else if (hours == currentHours && minutes < currentMinutes) {
-                    dishesAll.remove(i);
-                    continue;
-                }
-                i++;
             }
         }
 
@@ -215,8 +214,6 @@ public class ReceiptSelectionController {
                     continue loop_2;
                 }
                 for (String dishName : dishNames) {
-                    System.out.println(dish.getIngredientList().get(dishName));
-                    System.out.println(ingredientsListCustom.get(dishName));
                     if (dish.getIngredientList().get(dishName) > ingredientsListCustom.get(dishName)) {
                         dishesAll.remove(i);
                         continue loop_2;
@@ -253,43 +250,42 @@ public class ReceiptSelectionController {
         // and then by PLC, if needed
 
         double proteinsNeed, lipidsRestrict, sugarsNeed;
-        double proteins, lipids, carbo, sugars, basicNumber, PLAberation, PCAberation, LCAberation, sugarRestrict;
+        double proteins, lipids, carbo, sugars;
+        double PLAberation, PCAberation, LCAberation, sugarRestrict;
 
         if (proteinWindow != null) {
-            for (int i = 0; i < dishesAll.size(); ) {
-            proteinsNeed = user.getCustomUserDetails().getWeight() / 2;
-            sugarsNeed = (proteinsNeed / 3) * 2;
-            lipidsRestrict = proteinsNeed * 0.2;
-            proteins = dishesAll.get(i).getDishProteins();
-            lipids = dishesAll.get(i).getDishLipids();
-            carbo = dishesAll.get(i).getDishCarbo();
-            sugars = dishesAll.get(i).getDishSugars();
-            if (proteinsNeed < proteins || lipids > lipidsRestrict || (carbo * 0.7) > sugars || sugars < sugarsNeed) {
-                dishesAll.remove(i);
-                continue;
-            }
-            i++;
+            Iterator<Dish> dishIterator = dishesAll.iterator();
+            while (dishIterator.hasNext()) {
+                proteinsNeed = user.getCustomUserDetails().getWeight() / 2.0d;
+                sugarsNeed = (proteinsNeed / 3) * 2;
+                lipidsRestrict = proteinsNeed * 0.2;
+                Dish currDish = dishIterator.next();
+                proteins = currDish.getDishProteins();
+                lipids = currDish.getDishLipids();
+                carbo = currDish.getDishCarbo();
+                sugars = currDish.getDishSugars();
+                if (proteinsNeed < proteins || lipids > lipidsRestrict
+                        || (carbo * 0.7) > sugars || sugars < sugarsNeed)
+                    dishIterator.remove();
             }
         }
         else if (usePLC != null) {
-            loop_3:
-            for (int i = 0; i < dishesAll.size(); ) {
-                proteins = dishesAll.get(i).getDishProteins();
-                lipids = dishesAll.get(i).getDishLipids();
-                carbo = dishesAll.get(i).getDishCarbo();
-                sugars = dishesAll.get(i).getDishSugars();
-
+            Iterator<Dish> dishIterator = dishesAll.iterator();
+            while (dishIterator.hasNext()) {
+                Dish currDish = dishIterator.next();
+                proteins = currDish.getDishProteins();
+                lipids = currDish.getDishLipids();
+                carbo = currDish.getDishCarbo();
+                sugars = currDish.getDishSugars();;
 
                 PLAberation =  Math.abs(1 - (proteins / lipids) / ((double)proteinsCoef / (double)lipidsCoef));
                 PCAberation = Math.abs(1 - (proteins / carbo) / ((double)proteinsCoef / (double)carboCoef));
                 LCAberation = Math.abs(1 - (lipids / carbo) / ((double)lipidsCoef / (double)carboCoef));
-                sugarRestrict = ((double)sugarsCoef / 4) * (dishesAll.get(i).getDishCalority() / 100);
+                sugarRestrict = ((double)sugarsCoef / 4) * (currDish.getDishCalority() / 100);
 
-                if (PLAberation > 0.15 || PCAberation > 0.15 || LCAberation > 0.15 || sugars > sugarRestrict) {
-                    dishesAll.remove(i);
-                    continue loop_3;
-                }
-                i++;
+                if (PLAberation > 0.15 || PCAberation > 0.15
+                        || LCAberation > 0.15 || sugars > sugarRestrict)
+                    dishIterator.remove();
             }
         }
 

@@ -3,9 +3,12 @@ package com.site.andrewsfood.Controller.controllers;
 import com.site.andrewsfood.Controller.Utilities.ControllerUtils;
 import com.site.andrewsfood.Model.domain.*;
 import com.site.andrewsfood.Dao.UserRepo;
+import com.site.andrewsfood.Model.domain.enums.BodyConstitution;
+import com.site.andrewsfood.Model.domain.enums.Contradictions;
+import com.site.andrewsfood.Model.domain.enums.NutritionStyle;
+import com.site.andrewsfood.Model.domain.enums.TrainType;
 import com.site.andrewsfood.Service.MailService;
 import com.site.andrewsfood.Service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/registration")
@@ -91,9 +93,9 @@ public class RegistrationController {
 
         user.setActive(false);
         customUserDetails.setActivationCode(UUID.randomUUID().toString());
-        if (!customUserDetails.getNutritionStyle().equals("sport")) {
-            customUserDetails.setBodyConstitution("default");
-            customUserDetails.setTrainType("default");
+        if (customUserDetails.getNutritionStyle() == NutritionStyle.SPORT) {
+            customUserDetails.setBodyConstitution(BodyConstitution.DEFAULT);
+            customUserDetails.setTrainType(TrainType.DEFAULT);
         }
         user.setCustomUserDetails(customUserDetails);
 

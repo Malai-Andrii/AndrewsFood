@@ -1,5 +1,6 @@
 package com.site.andrewsfood.Service;
 
+import com.site.andrewsfood.Model.domain.Dish;
 import com.site.andrewsfood.Model.domain.Ingredient;
 import com.site.andrewsfood.Dao.IngredientRepo;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,10 @@ public class IngredientService {
     public List<Ingredient> getAllIngredients(){
         return ingredientRepo.findAll();
     };
+
+    public Ingredient findById(long id){
+        return ingredientRepo.findById(id);
+    }
 
     public Ingredient findByIngredientName(String ingredientName){
         return ingredientRepo.findByIngredientName(ingredientName);

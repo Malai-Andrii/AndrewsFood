@@ -102,50 +102,50 @@
                             <label for="nutritionStyle">Стиль харчування:</label>
                             <select class="form-control" id="nutritionStyle" name="nutritionStyle" onchange="triggerSportDisplay(); PLCandCalority();"
                                     th:value="${customUserDetails} ? ${customUserDetails.nutritionStyle} : 'usual'">
-                                <option value="usual" id="usual">Звичайний</option>
-                                <option value="vegan" id="vegan">Веганство</option>
-                                <option value="vegetarian" id="vegetarian">Вегетеріанство</option>
-                                <option value="redutarian" id="redutarian">Редутаріанство</option>
-                                <option value="sport" id="sport">Спортивний</option>
+                                <option value="USUAL" id="usual">Звичайний</option>
+                                <option value="VEGAN" id="vegan">Веганство</option>
+                                <option value="VEGETARIAN" id="vegetarian">Вегетеріанство</option>
+                                <option value="REDUTARIAN" id="redutarian">Редутаріанство</option>
+                                <option value="SPORT" id="sport">Спортивний</option>
                             </select>
                         </div>
                         <div class="form-group" id="life_div">
                             <label for="lifeStyle">Спосіб життя:</label>
                             <select class="form-control" id="lifeStyle" name="lifeStyle" onchange="triggerLifeDisplay(); PLCandCalority();"
                                     th:value="${customUserDetails} ? ${customUserDetails.lifeStyle} : 'moderate'">
-                                <option value="sedentary" id="sedentary">Сидячий</option>
-                                <option value="moderate" id="moderate">Поміркований (побутова активність)</option>
-                                <option value="medium" id="medium">Середній(3-5 занять на тиждень)</option>
-                                <option value="active" id="active">Активний(інтенсивні навантаженя, 6-7 занять на тиждень)</option>
-                                <option value="sportive" id="sportive">Спортсмен</option>
+                                <option value="SEDENTARY" id="sedentary">Сидячий</option>
+                                <option value="MODERATE" id="moderate">Поміркований (побутова активність)</option>
+                                <option value="MEDIUM" id="medium">Середній(3-5 занять на тиждень)</option>
+                                <option value="ACTIVE" id="active">Активний(інтенсивні навантаженя, 6-7 занять на тиждень)</option>
+                                <option value="SPORTIVE" id="sportive">Спортсмен</option>
                             </select>
                         </div>
                         <div class="form-group" id="bodyConstitutionDiv" style="display: none;">
                             <label for="bodyConstitution">Тип тілобудови:</label>
                             <select class="form-control" id="bodyConstitution" name="bodyConstitution" onchange="return generatePLC()"
                                     th:value="${customUserDetails} ? ${customUserDetails.bodyConstitution} : 'ectomorph'">
-                                <option value="ectomorph">Ектоморф</option>
-                                <option value="mezomorph">Мезоморф</option>
-                                <option value="endomorph">Ендоморф</option>
+                                <option value="ECTO">Ектоморф</option>
+                                <option value="MESO">Мезоморф</option>
+                                <option value="ENDO">Ендоморф</option>
                             </select>
                         </div>
                         <div class="form-group" id="trainTypeDiv" style="display: none;">
                             <label for="trainType">Тип тренування:</label>
                             <select class="form-control" id="trainType" name="trainType" onchange="return generatePLC()"
                                     th:value="${customUserDetails} ? ${customUserDetails.trainType} : 'mixed'">
-                                <option value="power">Силові вправи</option>
-                                <option value="cardio">Кардіо</option>
-                                <option value="mixed">Змішаний</option>
+                                <option value="POWER">Силові вправи</option>
+                                <option value="CARDIO">Кардіо</option>
+                                <option value="MIXED">Змішаний</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="religion">Релігійні обмеження:</label>
                             <select class="form-control" id="religion" name="religion"
                                     th:value="${customUserDetails} ? ${customUserDetails.religion} : 'none'">
-                                <option value="none">Нема</option>
-                                <option value="islam">Іслам</option>
-                                <option value="judaism">Юдаїзм</option>
-                                <option value="hinduism">Індуїзм</option>
+                                <option value="NONE">Нема</option>
+                                <option value="ISLAM">Іслам</option>
+                                <option value="JUDAISM">Юдаїзм</option>
+                                <option value="HINDUISM">Індуїзм</option>
                             </select>
                         </div>
                         <div class="form-group">

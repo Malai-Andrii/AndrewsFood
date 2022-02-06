@@ -1,7 +1,6 @@
 package com.site.andrewsfood.Dao;
 
 import com.site.andrewsfood.Model.domain.CustomUserDetails;
-import com.site.andrewsfood.Model.domain.Role;
 import com.site.andrewsfood.Model.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,12 +12,15 @@ public interface UserRepo extends JpaRepository<User, Long> {
     User findByUsername(String username);
     User findById(long id);
     User findByUserDetails(CustomUserDetails customUserDetails);
-    List<User> findAllByRole(Role user);
+
     @Transactional
     void deleteByUsername(String userName);
+    @Query("select u from User u where u.role='USER'")
+    List<User> findAllByRoleUser();
+    @Query("select count(u.user_id) from User u where u.role='USER'")
+    Long countAllByUserRole();
     @Query("select count(u.user_id) from User u")
     Long countAllById();
-
     @Query("select avg(ud.age) from CustomUserDetails ud")
     Integer AvgAge();
     @Query("select avg(ud.calority) from CustomUserDetails ud")

@@ -1,4 +1,4 @@
-package com.site.andrewsfood.Model.domain;
+package com.site.andrewsfood.Model.domain.enums;
 
 import org.springframework.security.core.GrantedAuthority;
 

@@ -1,5 +1,6 @@
 package com.site.andrewsfood.Model.domain;
 
+import com.site.andrewsfood.Model.domain.enums.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

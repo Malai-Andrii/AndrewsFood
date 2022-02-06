@@ -1,6 +1,7 @@
 package com.site.andrewsfood.Model.domain;
 
 
+import com.site.andrewsfood.Model.domain.enums.*;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
@@ -38,22 +39,21 @@ public class CustomUserDetails implements Serializable {
     @Range(min = 30, max = 250)
     private Integer weight;
 
-  //  @ElementCollection(targetClass = NutritionStyle.class, fetch = FetchType.EAGER)
-  //  @Enumerated(EnumType.STRING)
-    private String nutritionStyle;
 
-    private String lifeStyle;
-    //  @ElementCollection(targetClass = BodyConstitution.class, fetch = FetchType.EAGER)
-  //  @Enumerated(EnumType.STRING)
-    private String bodyConstitution;
+    @Enumerated(EnumType.STRING)
+    private NutritionStyle nutritionStyle;
 
-   // @ElementCollection(targetClass = TrainType.class, fetch = FetchType.EAGER)
-   // @Enumerated(EnumType.STRING)
-    private String trainType;
+    @Enumerated(EnumType.STRING)
+    private LifeStyle lifeStyle;
 
-   // @ElementCollection(targetClass = Religion.class, fetch = FetchType.EAGER)
-  //  @Enumerated(EnumType.STRING)
-    private String religion;
+    @Enumerated(EnumType.STRING)
+    private BodyConstitution bodyConstitution;
+
+    @Enumerated(EnumType.STRING)
+    private TrainType trainType;
+
+    @Enumerated(EnumType.STRING)
+    private Religion religion;
 
     @NotNull(message = "Поле калорійності порожнє!")
     @Range(min = 1000, max = 8000)
@@ -90,11 +90,11 @@ public class CustomUserDetails implements Serializable {
                              @NotNull(message = "Поле віку порожнє!") @Range(min = 16, max = 120) Integer age,
                              @NotNull(message = "Поле зросту порожнє!") @Range(min = 50, max = 250) Integer height,
                              @NotNull(message = "Поле ваги порожнє!") @Range(min = 30, max = 250) Integer weight,
-                             String nutritionStyle,
-                             String lifeStyle,
-                             String bodyConstitution,
-                             String trainType,
-                             String religion,
+                             NutritionStyle nutritionStyle,
+                             LifeStyle lifeStyle,
+                             BodyConstitution bodyConstitution,
+                             TrainType trainType,
+                             Religion religion,
                              @NotNull(message = "Поле калорійності порожнє!") @Range(min = 1000, max = 8000) Integer calority,
                              @NotNull(message = "Поле білків порожнє!") Integer proteinsCoef,
                              @NotNull(message = "Поле жирів порожнє!") Integer lipidsCoef,
@@ -176,26 +176,26 @@ public class CustomUserDetails implements Serializable {
         this.weight = weight;
     }
 //
-    public String getNutritionStyle() {
+    public NutritionStyle getNutritionStyle() {
         return nutritionStyle;
     }
 
-    public void setNutritionStyle(String nutritionStyle) {
+    public void setNutritionStyle(NutritionStyle nutritionStyle) {
         this.nutritionStyle = nutritionStyle;
     }
-    public String getTrainType() {
+    public TrainType getTrainType() {
         return trainType;
     }
 
-    public void setTrainType(String trainType) {
+    public void setTrainType(TrainType trainType) {
         this.trainType = trainType;
     }
 
-    public String getReligion() {
+    public Religion getReligion() {
         return religion;
     }
 
-    public void setReligion(String religion) {
+    public void setReligion(Religion religion) {
         this.religion = religion;
     }
 
@@ -207,11 +207,11 @@ public class CustomUserDetails implements Serializable {
         this.calority = calority;
     }
 
-    public String getBodyConstitution() {
+    public BodyConstitution getBodyConstitution() {
         return bodyConstitution;
     }
 
-    public void setBodyConstitution(String bodyConstitution) {
+    public void setBodyConstitution(BodyConstitution bodyConstitution) {
         this.bodyConstitution = bodyConstitution;
     }
 
@@ -255,11 +255,11 @@ public class CustomUserDetails implements Serializable {
         this.sugarsCoef = sugarsCoef;
     }
 
-    public String getLifeStyle() {
+    public LifeStyle getLifeStyle() {
         return lifeStyle;
     }
 
-    public void setLifeStyle(String lifeStyle) {
+    public void setLifeStyle(LifeStyle lifeStyle) {
         this.lifeStyle = lifeStyle;
     }
 }

@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @PreAuthorize("hasAuthority('ADMIN')")
 public class UserEditController {
 
-    @Autowired
-    UserService userService;
+    final UserService userService;
+
+    public UserEditController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/userEdit")
     public String userEditGet(Model model) {
@@ -37,7 +40,7 @@ public class UserEditController {
 
     private String addAtributes(Model model) {
         model.addAttribute("users", userService.findAllUsers());
-        model.addAttribute("allUsers", userService.AllUsers());
+        model.addAttribute("allUsers", userService.allUsersCount());
         model.addAttribute("avgAge", userService.AverageAge());
         model.addAttribute("avgCalority", userService.AverageCalority());
         model.addAttribute("avgHeight", userService.AverageHeight());

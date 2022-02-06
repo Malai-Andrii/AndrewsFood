@@ -1,9 +1,11 @@
 package com.site.andrewsfood.Model.domain;
 
+import com.site.andrewsfood.Model.domain.enums.Contradictions;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Map;
 import java.util.Set;
 
@@ -43,6 +45,7 @@ public class Dish {
     @Enumerated(EnumType.STRING)
     Set<Contradictions> dishContradictions;
 
+    @NotNull(message = "Оберіть категорію страви!")
     private String dishType;
 
     private String fileImg;

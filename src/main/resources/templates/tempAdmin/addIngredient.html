@@ -21,38 +21,38 @@
                 document.getElementById("unitMeasure").value = "";
 
                 tempCalory = document.getElementById("calority").value;
-                document.getElementById("calority").value = "";
-                document.getElementById("calority").setAttribute('disabled', 'disabled');
+                document.getElementById("calority").value = "0";
+                document.getElementById("calority").setAttribute('readonly', 'readonly');
 
                 tempProteins = document.getElementById("proteins").value;
-                document.getElementById("proteins").value = "";
-                document.getElementById("proteins").setAttribute('disabled', 'disabled');
+                document.getElementById("proteins").value = "0";
+                document.getElementById("proteins").setAttribute('readonly', 'readonly');
 
                 tempLipids = document.getElementById("lipids").value;
-                document.getElementById("lipids").value = "";
-                document.getElementById("lipids").setAttribute('disabled', 'disabled');
+                document.getElementById("lipids").value = "0";
+                document.getElementById("lipids").setAttribute('readonly', 'readonly');
 
                 tempCarbo = document.getElementById("carbo").value;
-                document.getElementById("carbo").value = "";
-                document.getElementById("carbo").setAttribute('disabled', 'disabled');
+                document.getElementById("carbo").value = "0";
+                document.getElementById("carbo").setAttribute('readonly', 'readonly');
 
                 tempSugars = document.getElementById("sugars").value;
-                document.getElementById("sugars").value = "";
-                document.getElementById("sugars").setAttribute('disabled', 'disabled');
+                document.getElementById("sugars").value = "0";
+                document.getElementById("sugars").setAttribute('readonly', 'readonly');
             }
             else {
                 document.getElementById("unitMeasureDiv").style.display = "none";
                 document.getElementById("unitMeasure").value = "грамів";
                 document.getElementById("calority").value = tempCalory;
-                document.getElementById("calority").removeAttribute('disabled');
+                document.getElementById("calority").removeAttribute('readonly');
                 document.getElementById("proteins").value = tempProteins;
-                document.getElementById("proteins").removeAttribute('disabled');
+                document.getElementById("proteins").removeAttribute('readonly');
                 document.getElementById("lipids").value = tempLipids;
-                document.getElementById("lipids").removeAttribute('disabled');
+                document.getElementById("lipids").removeAttribute('readonly');
                 document.getElementById("carbo").value = tempCarbo;
-                document.getElementById("carbo").removeAttribute('disabled');
+                document.getElementById("carbo").removeAttribute('readonly');
                 document.getElementById("sugars").value = tempSugars;
-                document.getElementById("sugars").removeAttribute('disabled');
+                document.getElementById("sugars").removeAttribute('readonly');
             }
 
             return false;

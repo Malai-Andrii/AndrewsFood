@@ -2,11 +2,10 @@ package com.site.andrewsfood.Controller.controllers;
 
 import com.site.andrewsfood.Controller.Utilities.ControllerUtils;
 import com.site.andrewsfood.Model.domain.Miscellaneous;
-import com.site.andrewsfood.Model.domain.Role;
+import com.site.andrewsfood.Model.domain.enums.Role;
 import com.site.andrewsfood.Model.domain.User;
 import com.site.andrewsfood.Dao.MiscellaneousRepo;
 import com.site.andrewsfood.Dao.UserRepo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -22,12 +21,13 @@ import java.util.Map;
 @Controller
 @RequestMapping("/adminreg")
 public class AdminRegistrationConroller {
-    @Autowired
-    private UserRepo userRepo;
+    private final UserRepo userRepo;
+    private final MiscellaneousRepo miscellaneousRepo;
 
-    @Autowired
-    private MiscellaneousRepo miscellaneousRepo;
-
+    public AdminRegistrationConroller(UserRepo userRepo, MiscellaneousRepo miscellaneousRepo) {
+        this.userRepo = userRepo;
+        this.miscellaneousRepo = miscellaneousRepo;
+    }
 
     @GetMapping
     public String regAdminGet(Model model) {
@@ -35,7 +35,8 @@ public class AdminRegistrationConroller {
     }
 
     @PostMapping
-    public String registrateAdmin(@Valid User user, BindingResult bindingResult, @RequestParam String controlSequence, Model model) {
+    public String registrateAdmin(@Valid User user, BindingResult bindingResult,
+                                  @RequestParam String controlSequence, Model model) {
 
         if (bindingResult.hasErrors()) {
             Map<String, String> errors = ControllerUtils.getErrors(bindingResult);
@@ -43,16 +44,13 @@ public class AdminRegistrationConroller {
             return "tempNoAuthorization/regAdmin";
         }
 
-        User userFromDB = userRepo.findByUsername(user.getUsername());
-        if (userFromDB != null) {
+        if (userRepo.findByUsername(user.getUsername()) != null) {
             model.addAttribute("messageUserExists", "Користувач з даним ім'ям вже існує!");
             return "tempNoAuthorization/regAdmin";
         }
 
         Miscellaneous miscellaneous = miscellaneousRepo.findById(1);
-        String secret = miscellaneous.getControlSequence();
-
-        if (!controlSequence.equals(secret)) {
+        if (!controlSequence.equals(miscellaneous.getControlSequence())) {
             model.addAttribute("secretError", "Контрольну послідовність введено неправильно!");
             return "tempNoAuthorization/regAdmin";
         }

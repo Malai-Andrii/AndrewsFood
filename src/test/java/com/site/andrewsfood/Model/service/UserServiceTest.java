@@ -1,8 +1,8 @@
 package com.site.andrewsfood.Model.service;
 
-import com.site.andrewsfood.Model.domain.Contradictions;
+import com.site.andrewsfood.Model.domain.enums.Contradictions;
 import com.site.andrewsfood.Model.domain.CustomUserDetails;
-import com.site.andrewsfood.Model.domain.Role;
+import com.site.andrewsfood.Model.domain.enums.Role;
 import com.site.andrewsfood.Model.domain.User;
 import com.site.andrewsfood.Dao.CustomUserDetailsRepo;
 import com.site.andrewsfood.Dao.UserRepo;
